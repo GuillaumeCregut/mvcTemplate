@@ -4,9 +4,9 @@ namespace Editiel98;
 
 use Editiel98\Chore\Database;
 use Editiel98\Chore\Emitter;
-use Editiel98\Services\CSRFCheck;
+use Editiel98\Chore\CSRFCheck;
 
-abstract class Controller
+abstract class AbstractController
 {
     protected SmartyMKD $smarty;
     protected Session $session;
