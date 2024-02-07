@@ -17,7 +17,7 @@
       {include file="partials/_flash.tpl"}
     {/if}
     {block name=body}
-
+      Hello !
     {/block}
 </body>
 </html>
