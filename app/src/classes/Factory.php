@@ -4,7 +4,7 @@ namespace Editiel98;
 
 use Editiel98\Chore\Database;
 use Editiel98\Chore\AbstractEntity;
-use Editiel98\Chore\Manager\AbstractManager;
+use Editiel98\Chore\AbstractManager;
 
 class Factory
 {

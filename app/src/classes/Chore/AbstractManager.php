@@ -1,6 +1,6 @@
 <?php
 
-namespace Editiel98\Chore\Manager;
+namespace Editiel98\Chore;
 
 use Editiel98\Chore\Database;
 
