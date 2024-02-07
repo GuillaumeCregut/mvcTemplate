@@ -1,6 +1,6 @@
 <?php
 
-namespace Editiel98\Chore\Entity;
+namespace Editiel98\Chore;
 
 /**
  * Abstract class Entity
