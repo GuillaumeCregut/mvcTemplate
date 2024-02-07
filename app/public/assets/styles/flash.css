@@ -1,0 +1,150 @@
+:root{
+    --toast_warning: #E9BD0C;
+    --toast_error: #E24D4C;
+    --toast_info: #3498DB;
+    --toast_success: #0ABF30;
+    --toast_background: #ffffff;
+}
+.toast::before{
+    position: absolute;
+    content: '';
+    height: 3px;
+    width: 100%;
+    bottom: 0px;
+    left:0px;
+    animation: progress 5s linear forwards;
+}
+
+@keyframes progress {
+    100%{
+        width: 0%;
+    }
+}
+.toast_notifications{
+    position: fixed;
+    top: 30px;
+    right: 20px;
+}
+
+.toast_notifications :where(.toast, .toast_column){
+    display: flex;
+    align-items: center;
+}
+
+.toast_notifications .toast{
+    width: 400px;
+    position: relative;
+    list-style-type: none;
+    overflow: hidden;
+    border-radius: 4px;
+    padding: 16px 17px;
+    margin-bottom: 10px;
+    background-color: var(--toast_background);
+    justify-content: space-between;
+    animation: show_toast 0.7s ease forwards;
+}
+
+@keyframes show_toast {
+    0%{
+        transform: translateX(100%);
+    }
+    40%{
+        transform: translateX(-5%);
+    }
+    80%{
+        transform: translateX(0%);
+    }
+    100%{
+        transform: translateX(-10px);
+    }
+}
+
+.toast .toast_column i{
+    font-size: 1.75rem;
+}
+
+.toast .toast_column span{
+    font-size: 1.07rem;
+    margin-left: 12px;
+}
+
+.toast i:last-child{
+    color: #aeb0d7;
+    cursor: pointer;
+}
+
+.toast i:last-child:hover{
+    color: black;
+}
+
+.toast.toast_success::before, .toast_btn#success{
+    background: var(--toast_success);
+}
+.toast.toast_error::before, .toast_btn#error{
+    background: var(--toast_error);
+}
+.toast.toast_warning::before, .toast_btn#warning{
+    background: var(--toast_warning);
+}
+.toast.toast_info::before, .toast_btn#info{
+    background: var(--toast_info);
+}
+
+.toast.toast_success .toast_column i{
+    color: var(--toast_success);
+}
+.toast.toast_error .toast_column i{
+    color: var(--toast_error);
+}
+.toast.toast_warning .toast_column i{
+    color: var(--toast_warning);
+}
+.toast.toast_info .toast_column i{
+    color: var(--toast_info);
+}
+
+
+
+.toast_notifications .toast.toast_hide{
+    animation: hide_toast 0.3s ease forwards;
+}
+
+@keyframes hide_toast {
+    0%{
+        transform: translateX(-10px);
+    }
+    40%{
+        transform: translateX(0%);
+    }
+    80%{
+        transform: translateX(-5%);
+    }
+    100%{
+        transform: translateX(calc(120%));
+    }
+}
+
+
+.toast_buttons .toast_btn{
+    border : none;
+    outline: none;
+    color :#fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 0 5px;
+    font-size: 1.2rem;
+}
+
+@media screen and (max-width:768px){
+    .toast_notifications{
+        width: 80vw;
+        right: 20px;
+    }
+    
+    .toast_notifications .toast{
+        width: 80vw;
+        font-size: 1rem;
+        margin-left: 20px;
+    }
+}
