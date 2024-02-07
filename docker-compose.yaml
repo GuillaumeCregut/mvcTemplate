@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  editiel_mysql:
+    container_name: editiel_mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: databasename
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    ports:
+      - '5306:3306'
+    volumes:
+      - ./mysql:/var/lib/mysql
+  mkd_php:
+    container_name: editiel_php
+    build:
+      context: .
+    ports:
+      - 8081:80
+      - 8443:443
+    volumes:
+      - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./apache/default-ssl.conf:/etc/apache2/sites-enabled/000-default-ssl.conf
+      - ./etc/ssl:/etc/ssl
+      - ./:/var/www
+    depends_on:
+      - editiel_mysql
+  phpma:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: editiel_mysql
+      PMA_USER: root
+      PMA_PASSWORD: secret
+      UPLOAD_LIMIT: 20M
+    ports:
+      - 8899:80
