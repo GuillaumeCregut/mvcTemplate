@@ -6,9 +6,8 @@ use Editiel98\AbstractController;
 
 class HomeController extends AbstractController
 {
-    public function index(?array $params=[])
+    public function index(): void
     {
-        echo "Hello";
-        var_dump($params);
+       $this->smarty->display('_base.tpl');
     }
 }
