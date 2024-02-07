@@ -1,13 +1,13 @@
 <?php
 
-namespace Editiel98\Manager;
+namespace Editiel98\Chore\Manager;
 
 use Editiel98\Chore\Database;
 
 /**
  * Manage informations from DB to Entity
  */
-abstract class Manager
+abstract class AbstractManager
 {
     /**
      * Name of the table represent entity

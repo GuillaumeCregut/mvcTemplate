@@ -4,6 +4,7 @@ namespace Editiel98;
 
 use Editiel98\Chore\Database;
 use Editiel98\Chore\Entity;
+use Editiel98\Chore\Manager\AbstractManager;
 
 class Factory
 {
@@ -55,14 +56,14 @@ class Factory
      * 
      * @return Manager
      */
-    // public static function getManager(string $name): Manager
-    // {
-    //     if (is_null(self::$db)) {
-    //         self::getdB();
-    //     }
-    //     $className = 'Editiel98\\Manager\\' . ucFirst($name);
-    //     return new $className(self::$db);
-    // }
+    public static function getManager(string $name): AbstractManager
+    {
+        if (is_null(self::$db)) {
+            self::getdB();
+        }
+        $className = 'Editiel98\\Manager\\' . ucFirst($name);
+        return new $className(self::$db);
+    }
 
     /**
      * Return an instance of smarty
