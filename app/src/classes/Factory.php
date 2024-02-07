@@ -3,7 +3,7 @@
 namespace Editiel98;
 
 use Editiel98\Chore\Database;
-use Editiel98\Chore\Entity;
+use Editiel98\Chore\AbstractEntity;
 use Editiel98\Chore\Manager\AbstractManager;
 
 class Factory
@@ -29,11 +29,11 @@ class Factory
      * return a new Entity 
      * @param string $name : name of entity to create
      * 
-     * @return Entity
+     * @return AbstractEntity
      */
-    public static function getEntity(string $name): Entity
+    public static function getEntity(string $name): AbstractEntity
     {
-        $className = 'Editiel98\\Entity\\' . ucFirst($name);
+        $className = 'App\\Entity\\' . ucFirst($name);
         return new $className;
     }
 
@@ -61,7 +61,7 @@ class Factory
         if (is_null(self::$db)) {
             self::getdB();
         }
-        $className = 'Editiel98\\Manager\\' . ucFirst($name);
+        $className = 'App\\Manager\\' . ucFirst($name);
         return new $className(self::$db);
     }
 
