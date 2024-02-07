@@ -36,7 +36,6 @@ abstract class Logger implements LoggerInterface
                 fclose($file);
                 return true;
             } else {
-                echo "Pas put ouvrir";
                 return false;
             }
         } catch (Exception $e) {
