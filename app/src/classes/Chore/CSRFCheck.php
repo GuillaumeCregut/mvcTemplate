@@ -1,6 +1,6 @@
 <?php
 
-namespace Editiel98\Services;
+namespace Editiel98\Chore;
 
 use Editiel98\Chore\GetEnv;
 use Editiel98\Session;
