@@ -2,3 +2,5 @@ mysql/
 .vscode/
 .env
 templates_c/
+app/src/logs/*
+!app/src/logs/.gitkeep
