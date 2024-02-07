@@ -15,7 +15,7 @@ class Autoloader
         if (strpos($class, __NAMESPACE__ . '\\') === 0) {
             $class = str_replace(__NAMESPACE__ . '\\', '', $class);
             $class = str_replace('\\', '/', $class);
-            require '../src/classes/' . $class . '.php';
+            require '../src/core/' . $class . '.php';
         }
         //NameSpace App
         if (strpos($class, 'App' . '\\') === 0) {

@@ -4,7 +4,7 @@ use Editiel98\Autoloader;
 use Editiel98\App;
 
 session_start();
-require __DIR__ . '/../src/classes/Autoloader.php';
+require __DIR__ . '/../src/core/Autoloader.php';
 Autoloader::register();
 $app = new App();
 $app->run();
