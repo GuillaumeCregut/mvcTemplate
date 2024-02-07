@@ -27,7 +27,6 @@ class App
 
             $controller->$method(...$controllerInfos[2]);
         } catch (Exception $e) {
-            var_dump($e->getMessage());
             header("HTTP/1.0 500 Internal Server Error");
             echo '500 - Internal Server Error';
             exit();
