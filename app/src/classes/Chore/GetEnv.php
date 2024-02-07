@@ -7,7 +7,7 @@ class GetEnv
 {
     public static function getEnvValue(string $value)
     {
-        $iniFile='../../.env';
+        $iniFile='../.env';
         $envDatas=getenv();
         if(!empty($envDatas[$value])){
             return $envDatas[$value];
