@@ -30,6 +30,12 @@ abstract class AbstractManager
      */
     protected string $className;
 
+
+    public function __construct(Database $db)
+    {
+        $this->db = $db;
+    }
+
     /**
      * Magic function for getters
      *
