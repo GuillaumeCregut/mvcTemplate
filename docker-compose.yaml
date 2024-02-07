@@ -24,7 +24,7 @@ services:
       - ./apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
       - ./apache/default-ssl.conf:/etc/apache2/sites-enabled/000-default-ssl.conf
       - ./etc/ssl:/etc/ssl
-      - ./:/var/www
+      - ./app:/var/www
     depends_on:
       - editiel_mysql
   phpma:
