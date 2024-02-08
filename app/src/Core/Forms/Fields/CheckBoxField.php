@@ -7,11 +7,12 @@ use Editiel98\Forms\Fields\AbstractField;
 class CheckBoxField extends AbstractField
 {
     private bool $value = false;
-    private string $typeOf = 'boolean';
+    private string $typeOf = self::TYPE_BOOL;
 
-    public function __construct(string $name, string $id)
+    public function __construct(string $name, string $id,string $typeOf)
     {
         parent::__construct($name, $id);
+        $this->typeOf=$typeOf;
     }
 
     /**

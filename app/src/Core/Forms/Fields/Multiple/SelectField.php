@@ -6,14 +6,15 @@ use Editiel98\Forms\Fields\AbstractField;
 
 class SelectField extends AbstractField
 {
-    private string $typeOf = "string";
+    private string $typeOf = self::TYPE_STRING;
     private array $options = [];
     private string $value = "";
 
-    public function __construct(string $name, string $id, ?string $value = '')
+    public function __construct(string $name, string $id, string $typeOf , ?string $value = '')
     {
         parent::__construct($name, $id);
         $this->value = $value;
+        $this->typeOf=$typeOf;
     }
 
     /**

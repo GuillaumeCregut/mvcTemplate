@@ -2,14 +2,18 @@
 
 namespace Editiel98\Forms\Fields;
 
+use Editiel98\Forms\TraitTypeOf;
+
 abstract class AbstractField
 {
+    use TraitTypeOf;
     protected string $name = '';
     protected string $class = '';
     protected string $id = '';
     protected array $dataset = [];
     protected array $label = ['class' => '', 'value' => ''];
     protected string $placeholder = '';
+    
 
     public function __construct(string $name, string $id)
     {

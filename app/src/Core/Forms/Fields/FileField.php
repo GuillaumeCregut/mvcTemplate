@@ -4,7 +4,7 @@ namespace Editiel98\Forms\Fields;
 
 class FileField extends AbstractField
 {
-    protected string $typeOf = 'file';
+    protected string $typeOf = self::TYPE_FILE;
 
     public function __construct(
         string $name,

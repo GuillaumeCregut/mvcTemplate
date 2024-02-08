@@ -7,14 +7,15 @@ use Editiel98\Forms\Fields\AbstractField;
 class RadioField extends AbstractField
 {
     private string $value = "";
-    private string $typeOf = 'string';
+    private string $typeOf = self::TYPE_STRING;
     private bool $checked = false;
 
-    public function __construct(string $name, string $id, string $value, ?bool $checked = false)
+    public function __construct(string $name, string $id, string $value,string $typeOf , ?bool $checked = false)
     {
         parent::__construct($name, $id);
         $this->checked = $checked;
         $this->value = $value;
+        $this->typeOf=$typeOf;
     }
 
     /**
