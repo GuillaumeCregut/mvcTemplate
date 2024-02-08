@@ -26,4 +26,6 @@ abstract class AbstractEntity
 
         return $this;
     }
+
+    abstract public function createFromData(array $datas): self;
 }
