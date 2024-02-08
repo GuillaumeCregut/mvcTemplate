@@ -19,7 +19,6 @@ abstract class AbstractController
     protected int $userRank;
     protected bool $isConnected = false;
     protected string $fullName = '';
-    protected CSRFCheck $csrfCheck;
 
     public function __construct()
     {
@@ -34,7 +33,6 @@ abstract class AbstractController
         }
         $this->emitter = Emitter::getInstance();
         $this->dbConnection = Database::getInstance();
-        $this->csrfCheck = new CSRFCheck($this->session);
         $this->getCredentials();
     }
 
