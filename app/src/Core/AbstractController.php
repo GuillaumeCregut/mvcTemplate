@@ -52,4 +52,12 @@ abstract class AbstractController
             $this->userRank = 0;
         }
     }
+
+    protected function render(string $filename, array $values)
+    {
+        foreach($values as $key=>$value) {
+            $this->smarty->assign($key,$value);
+        }
+        $this->smarty->display($filename);
+    }
 }
