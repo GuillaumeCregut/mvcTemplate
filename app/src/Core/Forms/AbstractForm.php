@@ -2,6 +2,8 @@
 
 namespace Editiel98\Forms;
 
+use Editiel98\Chore\CSRFCheck;
+use Editiel98\Factory;
 use Editiel98\Forms\Fields\AbstractField;
 
 abstract class AbstractForm
@@ -15,13 +17,15 @@ abstract class AbstractForm
     protected array $dataset = [];
     protected array $datas = [];
     protected bool $multipart;
+    private CSRFCheck $csrfCheck;
 
-    public function __construct(string $token, string $method, string $action, ?bool $multipart = false)
+    public function __construct(string $method, string $action, ?bool $multipart = false)
     {
         $this->action = $action;
         $this->method = $method;
-        $this->token = $token;
         $this->multipart = $multipart;
+        $session=Factory::getSession();
+        $this->csrfCheck=new CSRFCheck($session);
     }
 
     protected function addField(string $name, AbstractField $field): self
@@ -41,6 +45,7 @@ abstract class AbstractForm
      */
     public function startForm(): string
     {
+        $this->token=$this->csrfCheck->createToken();
         $form = '<form method="' . $this->method . '"';
         if (strlen($this->action) === 0) {
             $form .= ' action=""';
@@ -132,5 +137,31 @@ abstract class AbstractForm
     public function getFields(): array
     {
         return $this->fields;
+    }
+
+    public function checkDatas(array $datas): bool
+    {
+        if(empty($datas))
+            return false;
+        if(!isset($datas['token'])){
+            return false;
+        }
+        $token=$datas['token'];
+        var_dump($this->csrfCheck->checkToken($token)); //Works fine
+        //     return false;
+        $this->testDatas($datas);
+        return false;
+    }
+
+    private function testDatas(array $datas)
+    {
+        echo "<p>Forms infos</p>";
+        foreach($this->getFields() as $field){
+            var_dump($field->getName());
+        }
+       echo '<p>$_POST</p>';
+       foreach($datas as $key=>$data) {
+            var_dump($key,$data);
+       }
     }
 }
