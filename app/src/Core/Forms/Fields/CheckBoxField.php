@@ -14,6 +14,10 @@ class CheckBoxField extends AbstractField
         parent::__construct($name, $id);
     }
 
+    /**
+     * return HTML code for field
+     * @return string
+     */
     public function display(): string
     {
         $label = '<label for="' . $this->id . '"';

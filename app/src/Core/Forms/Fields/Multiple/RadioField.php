@@ -17,6 +17,10 @@ class RadioField extends AbstractField
         $this->value = $value;
     }
 
+    /**
+     * Return HTML Code for field
+     * @return string
+     */
     public function display(): string
     {
         $label = '<label for="' . $this->id . '"';

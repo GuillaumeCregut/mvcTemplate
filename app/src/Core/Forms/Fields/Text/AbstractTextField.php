@@ -17,6 +17,10 @@ abstract class AbstractTextField extends AbstractField
         $this->allowBlank = $allowBlank;
     }
 
+    /**
+     * Return HTML Code for field
+     * @return string
+     */
     public function display(): string
     {
         $label = '<label for="' . $this->id . '"';

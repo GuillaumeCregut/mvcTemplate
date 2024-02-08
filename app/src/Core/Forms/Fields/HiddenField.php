@@ -12,6 +12,10 @@ class HiddenField extends AbstractField
         $this->typeOf=$typeOf;
     }
 
+    /**
+     * http://framework:8080/test
+     * @return string
+     */
     public function display(): string
     {
         $input = '<input type=hidden name="'.$this->name.'" value"'.$this->value.'"';
@@ -22,6 +26,9 @@ class HiddenField extends AbstractField
         return $input;
     }
 
+    /**
+     * @return string
+     */
     public function getTypeOf(): string
     {
         return $this->typeOf;
