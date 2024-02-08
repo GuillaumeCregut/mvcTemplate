@@ -14,12 +14,14 @@ abstract class AbstractForm
     protected string $id = "";
     protected array $dataset = [];
     protected array $datas = [];
+    protected bool $multipart;
 
-    public function __construct(string $token, string $method, string $action)
+    public function __construct(string $token, string $method, string $action, ?bool $multipart = false)
     {
         $this->action = $action;
         $this->method = $method;
         $this->token = $token;
+        $this->multipart = $multipart;
     }
 
     protected function addField(string $name, AbstractField $field): self
@@ -55,6 +57,9 @@ abstract class AbstractForm
             foreach ($this->dataset as $key => $value) {
                 $form .= ' ' . $key . '="' . $value . '"';
             }
+        }
+        if ($this->multipart) {
+            $form .= ' enctype="multipart/form-data"';
         }
         $form .= '>';
         $form .= '<input type="hidden" name="token" value="' . $this->token . '">';
