@@ -5,9 +5,13 @@ namespace Editiel98\Forms;
 use Editiel98\Chore\CSRFCheck;
 use Editiel98\Factory;
 use Editiel98\Forms\Fields\AbstractField;
+use Error;
+use Exception;
 
 abstract class AbstractForm
 {
+    use TraitTypeOf;
+
     protected string $token = '';
     protected string $method = '';
     protected string $action = '';
@@ -17,6 +21,10 @@ abstract class AbstractForm
     protected array $dataset = [];
     protected array $datas = [];
     protected bool $multipart;
+    protected array $inputsDatas = [];
+    protected array $errorFields = [];
+    protected array $errorFiles = [];
+
     private CSRFCheck $csrfCheck;
 
     public function __construct(string $method, string $action, ?bool $multipart = false)
@@ -24,12 +32,13 @@ abstract class AbstractForm
         $this->action = $action;
         $this->method = $method;
         $this->multipart = $multipart;
-        $session=Factory::getSession();
-        $this->csrfCheck=new CSRFCheck($session);
+        $session = Factory::getSession();
+        $this->csrfCheck = new CSRFCheck($session);
     }
 
-    protected function addField(string $name, AbstractField $field): self
+    protected function addField(AbstractField $field): self
     {
+        $name = $field->getName();
         $this->fields[$name] = $field;
         return $this;
     }
@@ -45,7 +54,7 @@ abstract class AbstractForm
      */
     public function startForm(): string
     {
-        $this->token=$this->csrfCheck->createToken();
+        $this->token = $this->csrfCheck->createToken();
         $form = '<form method="' . $this->method . '"';
         if (strlen($this->action) === 0) {
             $form .= ' action=""';
@@ -139,29 +148,252 @@ abstract class AbstractForm
         return $this->fields;
     }
 
-    public function checkDatas(array $datas): bool
+    /**
+     * @param array $datas  datas from HTML form
+     * 
+     * @return bool datas are OK
+     */
+    public function checkFormInputs(array $datas): bool
     {
-        if(empty($datas))
+        if (empty($datas))
             return false;
-        if(!isset($datas['token'])){
+        if (!isset($datas['token'])) {
             return false;
         }
-        $token=$datas['token'];
-        var_dump($this->csrfCheck->checkToken($token)); //Works fine
-        //     return false;
-        $this->testDatas($datas);
-        return false;
+        $token = $datas['token'];
+        if (!$this->csrfCheck->checkToken($token)) {
+            $this->errorFields[] = 'token';
+            return false;
+        }
+
+        return $this->testInputs($datas);
     }
 
-    private function testDatas(array $datas)
+    /**
+     * @param array $datas datas from HTML form
+     * 
+     * @return bool datas are OK
+     */
+    private function testInputs(array $datas): bool
     {
-        echo "<p>Forms infos</p>";
-        foreach($this->getFields() as $field){
-            var_dump($field->getName());
+        foreach ($this->getFields() as $field) {
+            //var_dump($field->getName(), $field->getTypeOf());
+            $fieldName = $field->getName();
+            //Modifier le if ->return false supprimer le else
+            if (!array_key_exists($fieldName, $datas) && $field->isRequired() && $field->getTypeOf() !== self::TYPE_FILE) {
+                $this->errorFields[] = $fieldName;
+            } else {
+                if (!empty($datas[$fieldName])) {
+                    $this->processData($fieldName, $datas[$fieldName], $field);
+                }
+                if ($field->getTypeOf() === self::TYPE_FILE) {
+                    $this->processFile($fieldName, $field);
+                }
+            }
         }
-       echo '<p>$_POST</p>';
-       foreach($datas as $key=>$data) {
-            var_dump($key,$data);
-       }
+        $this->processError();
+        return empty($this->errorFields);
+    }
+
+    /**
+     * Check requirement for input data
+     * @param string $name
+     * @param string $value
+     * @param AbstractField $field
+     * 
+     * @return bool : data is OK with model requirement
+     */
+    private function processData(string $name, string $value, AbstractField $field): bool
+    {
+        $value = trim($value);
+        //On sécurise la donnée suivant le type
+        $flag = null;
+        switch ($field->getTypeOf()) {
+            case  self::TYPE_BOOL:
+                $filter = FILTER_VALIDATE_BOOL;
+                $flag = FILTER_NULL_ON_FAILURE;
+                break;
+            case self::TYPE_NUMBER:
+                $filter = FILTER_VALIDATE_INT;
+                $flag = FILTER_NULL_ON_FAILURE;
+                break;
+            case self::TYPE_STRING:
+                if ($value === '')
+                    return false;
+                $filter = FILTER_SANITIZE_SPECIAL_CHARS;
+                break;
+            case self::TYPE_DATETIME:
+                $filter = null;
+                $flag = "/\d{4}-(0[1-9]|1[1,2])-(0[1-9]|[12][0-9]|3[01])[A-Z](0[0-9]|1[0-9]|2[0-3]):([0-5])([0-9])/";
+                break;
+            case self::TYPE_DATE:
+                $filter = null;
+                $flag = "/\d{4}-(0[1-9]|1[1,2])-(0[1-9]|[12][0-9]|3[01])/";
+                break;
+            case self::TYPE_URL:
+                $filter = FILTER_VALIDATE_URL;
+                break;
+            case self::TYPE_FLOAT:
+                $filter = FILTER_VALIDATE_FLOAT;
+                $flag = FILTER_NULL_ON_FAILURE;
+                break;
+            default:
+                $filter = null;
+        }
+        try {
+            $filteredValue = $this->filterValue($value, $field->getTypeOf(), $filter, $flag);
+            if (is_null($filteredValue)) {
+                $this->errorFields[] = $name;
+                return false;
+            }
+            $this->inputsDatas[$name] = $filteredValue;
+            return true;
+        } catch (Exception $e) {
+            throw new Exception('Error in data processing');
+        } catch (Error $e) {
+            throw new Exception('Error in data processing');
+        }
+    }
+
+    /**
+     * @param mixed $value
+     * @param string $typeOf
+     * @param int|null $filter
+     * @param mixed|null $flag
+     * 
+     * @return mixed return filtered value or null if not ok
+     */
+    private function filterValue(mixed $value, string $typeOf, ?int $filter = null, mixed $flag = null): mixed
+    {
+        try {
+            if (is_null($filter)) {
+                return filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => $flag), "flags" => FILTER_NULL_ON_FAILURE));
+            }
+            if (is_null($flag)) {
+                return filter_var($value, $filter);
+            }
+            return filter_var($value, $filter, $flag);
+        } catch (Exception $e) {
+            throw new Exception('Error in filter settings');
+        } catch (Error $e) {
+            throw new Exception('Error in filter settings');
+        }
+    }
+
+    /**
+     * @param string $name : name of field
+     * @param AbstractField $field
+     * 
+     * @return bool result.
+     * Datas are stored in class's arrays
+     */
+    private function processFile(string $name,  AbstractField $field): bool
+    {
+        try {
+            $nameField = $name;
+            $multiple = false;
+            $pos = strpos($name, '[');
+            if ($pos) {
+                $nameField = substr($name, 0, $pos);
+                $multiple = true;
+            }
+            if (!array_key_exists($nameField, $_FILES) && $field->isRequired()) {
+                $this->errorFields[] = $name;
+                return false;
+            }
+            if ($multiple) {
+                $files = $this->orderFiles($_FILES[$nameField]);
+            } else {
+                $files[] = $_FILES[$nameField];
+            }
+            $noError = true;
+            foreach ($files as $file) {
+                if ($file['error'] !== 0) {
+                    $this->errorFields[] = $name;
+                    $this->errorFiles[$name][] = array('name' => $file['name']);
+                    $noError = false;
+                    continue;
+                }
+                $this->inputsDatas[$nameField][] = array(
+                    'tmp_name' => $file['tmp_name'],
+                    'name' => $file['name'],
+                    'size' => $file['size'],
+                    'type' => $file['type'],
+                    'full_path' => $file['full_path']
+                );
+            }
+            return $noError;
+        } catch (Exception $e) {
+            throw new Exception('Error in file processing');
+        } catch (Error $e) {
+            throw new Exception('Error in file processing');
+        }
+    }
+
+    /**
+     * @param array $filesDL
+     * 
+     * @return array
+     */
+    private function orderFiles(array $filesDL): array
+    {
+        try {
+            $arrayFiles = [];
+            foreach ($filesDL as $title => $files) {
+                foreach ($files as $idFile => $fieldValue) {
+                    $arrayFiles[$idFile][$title] = $fieldValue;
+                }
+            }
+            return $arrayFiles;
+        } catch (Exception $e) {
+            throw new Exception('Error in File field processing');
+        } catch (Error $e) {
+            throw new Exception('Error in File field processing');
+        }
+    }
+
+
+    /**
+     * Get the value of InputsDatas
+     */
+    public function getInputsDatas(): array|false
+    {
+        if (empty($this->inputsDatas))
+            return false;
+        return $this->inputsDatas;
+    }
+
+    /**
+     * Get the value of errorFields
+     */
+    public function getErrorFields(): array
+    {
+        return $this->errorFields;
+    }
+
+    /**
+     * @return void
+     */
+    private function processError(): void
+    {
+        try {
+            foreach ($this->errorFields as $fieldItem) {
+                var_dump($fieldItem);
+                $fieldError = $this->getField($fieldItem);
+                $fieldError->setError(true);
+            }
+        } catch (Exception $e) {
+            throw new Exception('Error in field error settings');
+        } catch (Error $e) {
+            throw new Exception('Error in field error settings');
+        }
+    }
+
+    /**
+     * Get the value of errorFiles
+     */
+    public function getErrorFiles(): array
+    {
+        return $this->errorFiles;
     }
 }
