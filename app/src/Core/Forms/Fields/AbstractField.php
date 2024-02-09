@@ -14,7 +14,7 @@ abstract class AbstractField
     protected array $dataset = [];
     protected array $label = ['class' => '', 'value' => ''];
     protected string $placeholder = '';
-    
+    protected bool $error=false;
 
     public function __construct(string $name, string $id, bool $required)
     {
@@ -141,5 +141,23 @@ abstract class AbstractField
     public function isRequired(): bool
     {
         return $this->required;
+    }
+
+    /**
+     * Get the value of error
+     */
+    public function isError(): bool
+    {
+        return $this->error;
+    }
+
+    /**
+     * Set the value of error
+     */
+    public function setError(bool $error): self
+    {
+        $this->error = $error;
+
+        return $this;
     }
 }
