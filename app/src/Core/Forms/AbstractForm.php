@@ -378,7 +378,6 @@ abstract class AbstractForm
     {
         try {
             foreach ($this->errorFields as $fieldItem) {
-                var_dump($fieldItem);
                 $fieldError = $this->getField($fieldItem);
                 $fieldError->setError(true);
             }
