@@ -6,6 +6,7 @@ use Editiel98\Chore\Emitter;
 use Editiel98\Chore\Logger\ErrorLogger;
 use Editiel98\Chore\Logger\WarnLogger;
 use App\Router\Routing;
+use Error;
 use Exception;
 
 class App
@@ -17,16 +18,20 @@ class App
         $this->setEmitter();
         $controllerInfos = $this->decodeURI();
         if (empty($controllerInfos)) {
-            //TODO Error message 404 
+            header("HTTP/1.0 404 Not Found");
+            echo '404 - Not Found';
             die();
         }
         try {
             $controllerName = '\\App\\Controller\\' . $controllerInfos[0];
             $controller = new  $controllerName();
             $method = $controllerInfos[1];
-
             $controller->$method(...$controllerInfos[2]);
         } catch (Exception $e) {
+            header("HTTP/1.0 500 Internal Server Error");
+            echo '500 - Internal Server Error';
+            exit();
+        } catch(Error $e) {
             header("HTTP/1.0 500 Internal Server Error");
             echo '500 - Internal Server Error';
             exit();

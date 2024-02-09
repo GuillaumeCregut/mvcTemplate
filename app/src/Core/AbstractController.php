@@ -18,13 +18,12 @@ abstract class AbstractController
     protected int $userId;
     protected int $userRank;
     protected bool $isConnected = false;
-    protected string $fullName ='';
-    protected CSRFCheck $csrfCheck;
+    protected string $fullName = '';
 
     public function __construct()
     {
         $this->smarty = new SmartyMKD();
-        
+
         $this->session = Factory::getSession();
         $this->flash = new Flash();
         $this->hasFlash = $this->flash->hasFlash();
@@ -34,7 +33,6 @@ abstract class AbstractController
         }
         $this->emitter = Emitter::getInstance();
         $this->dbConnection = Database::getInstance();
-        $this->csrfCheck = new CSRFCheck($this->session);
         $this->getCredentials();
     }
 
@@ -46,10 +44,18 @@ abstract class AbstractController
                 $this->isConnected = true;
                 $this->userRank = $this->session->getKey(Session::SESSION_RANK_USER);
                 $this->userId = $this->session->getKey(Session::SESSION_USER_ID);
-                $this->fullName=$this->session->getKey(Session::SESSION_FULLNAME);
+                $this->fullName = $this->session->getKey(Session::SESSION_FULLNAME);
             }
         } else {
             $this->userRank = 0;
         }
+    }
+
+    protected function render(string $filename, array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->smarty->assign($key, $value);
+        }
+        $this->smarty->display($filename);
     }
 }
