@@ -23,7 +23,7 @@ class FileField extends AbstractField
             $label.=' class="'.$this->label['class'].'"';
         }
         $label.='>'.$this->label['value'];
-        $input='<input type="file" id="'. $this->name.'" name="'.$this->id.'"';
+        $input='<input type="file" id="'. $this->id.'" name="'.$this->name.'"';
         if($this->class!=='') {
             $input.=' class="'.$this->class.'"';
         }
