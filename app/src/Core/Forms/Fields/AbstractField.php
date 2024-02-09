@@ -7,6 +7,7 @@ use Editiel98\Forms\TraitTypeOf;
 abstract class AbstractField
 {
     use TraitTypeOf;
+    protected bool $required;
     protected string $name = '';
     protected string $class = '';
     protected string $id = '';
@@ -15,10 +16,11 @@ abstract class AbstractField
     protected string $placeholder = '';
     
 
-    public function __construct(string $name, string $id)
+    public function __construct(string $name, string $id, bool $required)
     {
         $this->name = $name;
         $this->id = $id;
+        $this->required=$required;
     }
 
     abstract public function getTypeOf(): string;
@@ -131,5 +133,13 @@ abstract class AbstractField
         $this->placeholder = $placeholder;
 
         return $this;
+    }
+
+    /**
+     * Get the value of required
+     */
+    public function isRequired(): bool
+    {
+        return $this->required;
     }
 }

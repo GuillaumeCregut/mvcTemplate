@@ -16,7 +16,7 @@ abstract class AbstractDateField extends AbstractField
 
     public function __construct(string $name, string $id, ?bool $allowBlank = false)
     {
-        parent::__construct($name, $id);
+        parent::__construct($name, $id, !$allowBlank);
         $this->allowBlank = $allowBlank;
     }
 

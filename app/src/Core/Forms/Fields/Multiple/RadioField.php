@@ -10,12 +10,12 @@ class RadioField extends AbstractField
     private string $typeOf = self::TYPE_STRING;
     private bool $checked = false;
 
-    public function __construct(string $name, string $id, string $value,string $typeOf , ?bool $checked = false)
+    public function __construct(string $name, string $id, string $value, string $typeOf, ?bool $required=true, ?bool $checked = false)
     {
-        parent::__construct($name, $id);
+        parent::__construct($name, $id, $required);
         $this->checked = $checked;
         $this->value = $value;
-        $this->typeOf=$typeOf;
+        $this->typeOf = $typeOf;
     }
 
     /**

@@ -6,13 +6,15 @@ use Editiel98\Forms\Fields\AbstractField;
 
 class CheckBoxField extends AbstractField
 {
-    private bool $value = false;
+    private string $value = '';
     private string $typeOf = self::TYPE_BOOL;
+    private bool $checked;
 
-    public function __construct(string $name, string $id,string $typeOf)
+    public function __construct(string $name, string $id, string $typeOf, ?bool $required = true, ?bool $checked = false)
     {
-        parent::__construct($name, $id);
-        $this->typeOf=$typeOf;
+        parent::__construct($name, $id, $required);
+        $this->typeOf = $typeOf;
+        $this->checked = false;
     }
 
     /**
@@ -34,8 +36,11 @@ class CheckBoxField extends AbstractField
         if ($this->class !== '') {
             $input .= ' class="' . $this->class . '"';
         }
-        if ($this->value) {
+        if ($this->checked) {
             $input .= ' checked';
+        }
+        if ($this->value !== '') {
+            $input .= ' value="' . $this->value . '"';
         }
         if (!empty($this->dataset)) {
             foreach ($this->dataset as $key => $value) {
@@ -70,5 +75,23 @@ class CheckBoxField extends AbstractField
     public function getTypeOf(): string
     {
         return $this->typeOf;
+    }
+
+    /**
+     * Get the value of checked
+     */
+    public function isChecked(): bool
+    {
+        return $this->checked;
+    }
+
+    /**
+     * Set the value of checked
+     */
+    public function setChecked(bool $checked): self
+    {
+        $this->checked = $checked;
+
+        return $this;
     }
 }

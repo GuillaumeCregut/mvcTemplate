@@ -9,10 +9,11 @@ class FileField extends AbstractField
     public function __construct(
         string $name,
         string $id,
+        ?bool $required=true,
         private ?array $accept = [],
         private ?bool $multiple = false
     ) {
-        parent::__construct($name,$id);
+        parent::__construct($name,$id,$required);
     }
 
     public function display(): string

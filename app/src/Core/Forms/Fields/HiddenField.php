@@ -7,9 +7,9 @@ class HiddenField extends AbstractField
     private string $typeOf = self::TYPE_STRING;
     private string $value;
 
-    public function __construct(string $name, string $id, string $typeOf)
+    public function __construct(string $name, string $id, string $typeOf, ?bool $required = true)
     {
-        parent::__construct($name, $id);
+        parent::__construct($name, $id, $required);
         $this->typeOf = $typeOf;
     }
 

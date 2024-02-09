@@ -10,11 +10,11 @@ class SelectField extends AbstractField
     private array $options = [];
     private string $value = "";
 
-    public function __construct(string $name, string $id, string $typeOf , ?string $value = '')
+    public function __construct(string $name, string $id, string $typeOf, ?bool $required = true, ?string $value = '')
     {
-        parent::__construct($name, $id);
+        parent::__construct($name, $id, $required);
         $this->value = $value;
-        $this->typeOf=$typeOf;
+        $this->typeOf = $typeOf;
     }
 
     /**
