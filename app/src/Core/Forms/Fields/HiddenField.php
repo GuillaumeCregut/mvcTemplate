@@ -7,10 +7,11 @@ class HiddenField extends AbstractField
     private string $typeOf = self::TYPE_STRING;
     private string $value;
 
-    public function __construct(string $name, string $id, string $typeOf, ?bool $required = true)
+    public function __construct(string $name, string $id,string $value, string $typeOf, ?bool $required = true)
     {
         parent::__construct($name, $id, $required);
         $this->typeOf = $typeOf;
+        $this->value=$value;
     }
 
     /**
@@ -19,7 +20,7 @@ class HiddenField extends AbstractField
      */
     public function display(): string
     {
-        $input = '<input type=hidden name="' . $this->name . '" value"' . $this->value . '"';
+        $input = '<input type=hidden name="' . $this->name . '" value="' . $this->value . '"';
         if ($this->id !== '') {
             'id="' . $this->id . '"';
         }
@@ -33,5 +34,23 @@ class HiddenField extends AbstractField
     public function getTypeOf(): string
     {
         return $this->typeOf;
+    }
+
+    /**
+     * Get the value of value
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set the value of value
+     */
+    public function setValue(string $value): self
+    {
+        $this->value = $value;
+
+        return $this;
     }
 }
