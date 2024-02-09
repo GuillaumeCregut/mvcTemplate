@@ -14,7 +14,7 @@ class CheckBoxField extends AbstractField
     {
         parent::__construct($name, $id, $required);
         $this->typeOf = $typeOf;
-        $this->checked = false;
+        $this->checked = $checked;
     }
 
     /**
