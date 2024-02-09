@@ -11,4 +11,5 @@ trait TraitTypeOf
     const TYPE_URL="url";
     const TYPE_BOOL='boolean';
     const TYPE_TIME='time';
+    const TYPE_FLOAT='float';
 }
