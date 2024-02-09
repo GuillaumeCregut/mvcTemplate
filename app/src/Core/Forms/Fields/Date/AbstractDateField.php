@@ -26,10 +26,14 @@ abstract class AbstractDateField extends AbstractField
      */
     public function display(): string
     {
+        $displayError = $this->error ? 'error_field' : '';
         $label = '<label for="' . $this->id . '"';
         if (strlen($this->label['class']) !== 0) {
-            $label .= ' class="' . $this->label['class'] . '"';
+            $label .= ' class="' . $this->label['class'] . ' ' . $displayError . '"';
+        } elseif ($this->error) {
+            $label .= 'class="' . $displayError . '"';
         }
+
         $label .= '>' . $this->label['value'];
 
         $input = '<input type="' . $this->type . '" name="' . $this->name . '"';

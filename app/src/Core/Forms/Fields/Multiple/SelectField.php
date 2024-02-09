@@ -23,9 +23,12 @@ class SelectField extends AbstractField
      */
     public function display(): string
     {
+        $displayError = $this->error ? 'error_field' : '';
         $label = '<label for="' . $this->id . '"';
         if ($this->label['class'] !== '') {
-            $label .= ' class="' . $this->label['class'] . '"';
+            $label .= ' class="' . $this->label['class'] . ' ' . $displayError . '"';
+        } elseif ($this->error) {
+            $label .= 'class="' . $displayError . '"';
         }
         $label .= '>';
         $label .= $this->label['value'];
