@@ -1,6 +1,6 @@
 <?php
 
-namespace Editiel98;
+namespace Editiel98\Chore\Routing;
 
 use Editiel98\Chore\ClassFinder;
 use ReflectionClass;
@@ -9,7 +9,7 @@ class RegisterController
 {
     const APP_ROOT = __DIR__ . '/../../';
 
-    public static function registerContoller(string $controller): array |false
+    private static function registerContoller(string $controller): array |false
     {
         $routes = [];
         $class = new ReflectionClass($controller);
@@ -44,7 +44,7 @@ class RegisterController
                 self::storePaths($routes, $controllerRoutes);
             }
         }
-        var_dump($routes);
+        return $routes;
     }
 
     private static function storePaths(array &$routes, array $controller)
