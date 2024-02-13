@@ -2,10 +2,10 @@
 
 namespace Editiel98;
 
-use Editiel98\Chore\Emitter;
-use Editiel98\Chore\Logger\ErrorLogger;
-use Editiel98\Chore\Logger\WarnLogger;
-use Editiel98\Chore\Routing\Routing;
+use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Logger\ErrorLogger;
+use Editiel98\Kernel\Logger\WarnLogger;
+use Editiel98\Kernel\Routing\Routing;
 use Error;
 use Exception;
 
