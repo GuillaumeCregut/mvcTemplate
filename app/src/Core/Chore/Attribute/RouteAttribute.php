@@ -8,7 +8,8 @@ class RouteAttribute
 {
     public function __construct(
         private string $path,
-        private ?array $datas=[]
+        private ?array $datas=[],
+        private ?string $name=''
     )
     {
         
@@ -28,5 +29,13 @@ class RouteAttribute
         public function getDatas(): ?array
         {
                 return $this->datas;
+        }
+
+        /**
+         * Get the value of name
+         */
+        public function getName(): ?string
+        {
+                return $this->name;
         }
 }
