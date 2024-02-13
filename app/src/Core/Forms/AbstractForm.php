@@ -2,7 +2,7 @@
 
 namespace Editiel98\Forms;
 
-use Editiel98\Chore\CSRFCheck;
+use Editiel98\Kernel\CSRFCheck;
 use Editiel98\Factory;
 use Editiel98\Forms\Fields\AbstractField;
 use Error;
