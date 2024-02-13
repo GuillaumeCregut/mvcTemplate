@@ -7,6 +7,8 @@ use ReflectionClass;
 
 class RoutesDisplay
 {
+    use SlugTrait;
+
     private array $routes = [];
 
     public function __construct()
@@ -60,7 +62,7 @@ class RoutesDisplay
      * 
      * @return array
      */
-    private function checkUrlVars(string $url): array|false
+   /* private function checkUrlVars(string $url): array|false
     {
         $slug = '';
         if ($start = strpos($url, '{')) {
@@ -72,7 +74,7 @@ class RoutesDisplay
             }
         }
         return false;
-    }
+    }*/
 
     /**
      * Get the value of routes
