@@ -4,7 +4,7 @@ namespace Editiel98;
 
 use Editiel98\Chore\Database;
 use Editiel98\Chore\Emitter;
-use Editiel98\Chore\CSRFCheck;
+
 
 abstract class AbstractController
 {
