@@ -1,6 +1,6 @@
 <?php
 
-namespace Editiel98\Chore\Routing;
+namespace Editiel98\Kernel\Routing;
 
 class Routing
 {

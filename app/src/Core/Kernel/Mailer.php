@@ -1,8 +1,8 @@
 <?php
 
-namespace Editiel98\Chore;
+namespace Editiel98\Kernel;
 
-use Editiel98\Chore\Emitter;
+use Editiel98\Kernel\Emitter;
 use Editiel98\SmartyMKD;
 use Exception;
 

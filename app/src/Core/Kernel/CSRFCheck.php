@@ -1,8 +1,8 @@
 <?php
 
-namespace Editiel98\Chore;
+namespace Editiel98\Kernel;
 
-use Editiel98\Chore\GetEnv;
+use Editiel98\Kernel\GetEnv;
 use Editiel98\Session;
 use Exception;
 

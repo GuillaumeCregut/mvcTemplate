@@ -1,5 +1,5 @@
 <?php
-namespace Editiel98\Chore;
+namespace Editiel98\Kernel;
 
 use Exception;
 

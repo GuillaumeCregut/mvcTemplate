@@ -1,8 +1,8 @@
 <?php
 
-namespace Editiel98\Chore\Routing;
+namespace Editiel98\Kernel\Routing;
 
-use Editiel98\Chore\ClassFinder;
+use Editiel98\Kernel\ClassFinder;
 use ReflectionClass;
 
 class RoutesDisplay
@@ -34,10 +34,10 @@ class RoutesDisplay
         $routes = [];
         $class = new ReflectionClass($controller);
         foreach ($class->getMethods() as $method) {
-            if (empty($method->getAttributes(\Editiel98\Chore\Attribute\RouteAttribute::class)))
+            if (empty($method->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class)))
                 continue;
             $methodName = $method->getName();
-            $routeAttributes[$methodName] = $method->getAttributes(\Editiel98\Chore\Attribute\RouteAttribute::class)[0];
+            $routeAttributes[$methodName] = $method->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class)[0];
         }
         if (empty($routeAttributes)) {
             return false;

@@ -1,5 +1,5 @@
 <?php
-namespace Editiel98\Chore\Attribute;
+namespace Editiel98\Kernel\Attribute;
 
 use Attribute;
 

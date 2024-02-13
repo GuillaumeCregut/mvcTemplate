@@ -2,8 +2,8 @@
 
 namespace Editiel98;
 
-use Editiel98\Chore\Database;
-use Editiel98\Chore\Emitter;
+use Editiel98\Kernel\Database;
+use Editiel98\Kernel\Emitter;
 
 
 abstract class AbstractController

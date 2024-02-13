@@ -1,6 +1,6 @@
 <?php
 
-namespace Editiel98\Chore\Logger;
+namespace Editiel98\Kernel\Logger;
 
 /**
  * Logger for warnings

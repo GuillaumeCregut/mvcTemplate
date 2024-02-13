@@ -1,10 +1,10 @@
 <?php
 
-namespace Editiel98\Chore;
+namespace Editiel98\Kernel;
 
-use Editiel98\Chore\Emitter;
-use Editiel98\Chore\Exception\DbException;
-use Editiel98\Chore\GetEnv;
+use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Exception\DbException;
+use Editiel98\Kernel\GetEnv;
 use Exception;
 use \PDO;
 use PDOException;

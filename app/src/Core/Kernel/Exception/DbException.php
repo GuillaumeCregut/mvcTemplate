@@ -1,6 +1,6 @@
 <?php
 
-namespace Editiel98\Chore\Exception;
+namespace Editiel98\Kernel\Exception;
 
 use Exception;
 use Throwable;
