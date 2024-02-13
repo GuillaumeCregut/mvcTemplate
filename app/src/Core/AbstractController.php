@@ -4,11 +4,11 @@ namespace Editiel98;
 
 use Editiel98\Kernel\Database;
 use Editiel98\Kernel\Emitter;
-
+use Editiel98\Templates\SmartyEditiel;
 
 abstract class AbstractController
 {
-    protected SmartyMKD $smarty;
+    protected SmartyEditiel $smarty;
     protected Session $session;
     protected Flash $flash;
     protected Emitter $emitter;
@@ -22,7 +22,7 @@ abstract class AbstractController
 
     public function __construct()
     {
-        $this->smarty = new SmartyMKD();
+        $this->smarty = new SmartyEditiel();
 
         $this->session = Factory::getSession();
         $this->flash = new Flash();
