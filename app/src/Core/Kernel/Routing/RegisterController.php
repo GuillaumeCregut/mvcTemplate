@@ -7,6 +7,7 @@ use ReflectionClass;
 
 class RegisterController
 {
+    private static array $displayRoutes;
     /**
      * @param string $controller
      * 
@@ -28,7 +29,9 @@ class RegisterController
         }
         foreach ($routeAttributes as $key => $routeAttribute) {
             $route = $routeAttribute->newInstance();
-            $routes[$className][] = array('path' => $route->getPath(), 'method' => $key, 'datas' => $route->getDatas());
+            $routeName = $route->getName();
+            $routes[$className][] = array('path' => $route->getPath(), 'method' => $key, 'datas' => $route->getDatas(),'name'=>$routeName);
+            self::$displayRoutes[]=array('path' => $route->getPath(),'name'=>$routeName);
         }
         return $routes;
     }
@@ -50,6 +53,22 @@ class RegisterController
                 }
                 self::storePaths($routes, $controllerRoutes);
             }
+        }
+        return $routes;
+    }
+
+
+    public static function getRoutes(): array
+    {
+        $routes=[];
+        foreach(self::$displayRoutes as $key=>$route) {
+            $slugs=self::checkUrlVars($route['path']);
+            $name=$route['name'];
+            $path=$route['path'];
+            if($slugs) {
+                $path=$slugs['path'];
+            }
+            $routes[$name]=$path;
         }
         return $routes;
     }
@@ -88,7 +107,7 @@ class RegisterController
      * 
      * @return array
      */
-    private static function checkUrlVars(string $url): array|false
+    public static function checkUrlVars(string $url): array|false
     {
         $slug = '';
         if ($start = strpos($url, '{')) {
