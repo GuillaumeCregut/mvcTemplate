@@ -8,6 +8,7 @@ use Editiel98\Chore\Logger\WarnLogger;
 use App\Router\Routing;
 use Error;
 use Exception;
+use ReflectionClass;
 
 class App
 {
@@ -16,6 +17,8 @@ class App
     public function run()
     {
         $this->setEmitter();
+        //$test=RegisterController::registerContoller('\App\Controller\TestController');
+        RegisterController::getControllers();
         $controllerInfos = $this->decodeURI();
         if (empty($controllerInfos)) {
             header("HTTP/1.0 404 Not Found");
@@ -26,17 +29,21 @@ class App
             $controllerName = '\\App\\Controller\\' . $controllerInfos[0];
             $controller = new  $controllerName();
             $method = $controllerInfos[1];
-            $controller->$method(...$controllerInfos[2]);
+            $controller->$method(...$controllerInfos[3]);
         } catch (Exception $e) {
+            var_dump($e->getMessage());
             header("HTTP/1.0 500 Internal Server Error");
             echo '500 - Internal Server Error';
             exit();
         } catch(Error $e) {
+            var_dump($e->getMessage());
             header("HTTP/1.0 500 Internal Server Error");
             echo '500 - Internal Server Error';
             exit();
         }
     }
+
+   
 
 
     /**
@@ -54,12 +61,12 @@ class App
             return [];
         }
         $parameters = [];
-        foreach ($route[2] ?? [] as $parameter) {
+        foreach ($route[3] ?? [] as $parameter) {
             if (isset($_GET[$parameter])) {
-                $parameters[] = [$parameter => $_GET[$parameter]];
+                $parameters[$parameter] =  $_GET[$parameter];
             }
         }
-        return [$route[0], $route[1], $parameters];
+        return [$route[0], $route[1], '',$parameters];
     }
 
     /**
