@@ -308,10 +308,12 @@ abstract class AbstractForm
             }
             $noError = true;
             foreach ($files as $file) {
-                if ($file['error'] !== 0) {
-                    $this->errorFields[] = $name;
-                    $this->errorFiles[$name][] = array('name' => $file['name']);
-                    $noError = false;
+                if ($file['error'] !== 0 || $file['name']==='') {
+                    if($field->isRequired()){
+                        $this->errorFields[] = $name;
+                        $this->errorFiles[$name][] = array('name' => $file['name']);
+                        $noError = false;
+                    }
                     continue;
                 }
                 $this->inputsDatas[$nameField][] = array(
