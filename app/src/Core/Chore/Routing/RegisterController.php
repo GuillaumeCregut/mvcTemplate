@@ -7,8 +7,11 @@ use ReflectionClass;
 
 class RegisterController
 {
-    const APP_ROOT = __DIR__ . '/../../';
-
+    /**
+     * @param string $controller
+     * 
+     * @return array
+     */
     private static function registerContoller(string $controller): array |false
     {
         $routes = [];
@@ -27,10 +30,15 @@ class RegisterController
             $route = $routeAttribute->newInstance();
             $routes[$className][] = array('path' => $route->getPath(), 'method' => $key, 'datas' => $route->getDatas());
         }
+        var_dump($routes);
         return $routes;
     }
 
-    public static function getControllers()
+   
+    /**
+     * @return array named array with controller name, methods and params
+     */
+    public static function getControllers(): array
     {
         $routes = [];
         $controllers = ClassFinder::getClassesInNamespace('App\\Controller');
@@ -47,13 +55,26 @@ class RegisterController
         return $routes;
     }
 
-    private static function storePaths(array &$routes, array $controller)
+    /**
+     * @param array $routes
+     * @param array $controller
+     * 
+     * @return void
+     */
+    private static function storePaths(array &$routes, array $controller): void
     {
         foreach ($controller as $key => $controllerRoutes) {
             $controllerName = $key;
             foreach ($controllerRoutes as $route) {
-                $slug = self::checkUrlVars($route['path']);
+                $slugPresent = self::checkUrlVars($route['path']);
                 $path = $route['path'];
+                if($slugPresent) {
+                    $path=$slugPresent['path'];
+                    $slug=$slugPresent['slug'];
+                } else {
+                    $slug='';
+                }
+
                 $method = $route['method'];
                 if (empty($route['datas']))
                     $routes[$path] = array($controllerName, $method, $slug);
@@ -63,14 +84,22 @@ class RegisterController
         }
     }
 
-    private static function checkUrlVars(string $url)
+    /**
+     * @param string $url
+     * 
+     * @return array
+     */
+    private static function checkUrlVars(string $url): array|false
     {
         $slug = '';
         if ($start = strpos($url, '{')) {
             if (strpos($url, '}')) {
                 $slug = substr($url, $start + 1, -1);
+                $length=strlen($url)-$start;
+                $path= substr($url,0,$length-1);
+                return array('slug'=>$slug,'path'=>$path);
             }
         }
-        return $slug;
+        return false;
     }
 }
