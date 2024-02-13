@@ -25,17 +25,15 @@ class App
             die();
         }
         try {
-            $controllerName =  $controllerInfos[0];
+            $controllerName =  $controllerInfos['controller'];
             $controller = new  $controllerName();
-            $method = $controllerInfos[1];
-            $controller->$method(...$controllerInfos[3]);
+            $method = $controllerInfos['method'];
+            $controller->$method(...$controllerInfos['params']);
         } catch (Exception $e) {
-            var_dump($e->getMessage());
             header("HTTP/1.0 500 Internal Server Error");
             echo '500 - Internal Server Error';
             exit();
         } catch(Error $e) {
-            var_dump($e->getMessage());
             header("HTTP/1.0 500 Internal Server Error");
             echo '500 - Internal Server Error';
             exit();
