@@ -1,0 +1,16 @@
+{
+    "name": "editiel98/framework",
+    "autoload": {
+        "psr-4": {
+            "Editiel98\\": "src/Core",
+            "App\\": "src/App"
+        }
+    },
+    "authors": [
+        {
+            "name": "Guillaume Crégut",
+            "email": "gcregut@free.fr"
+        }
+    ],
+    "require": {}
+}

@@ -5,6 +5,7 @@ class Routing
 {
     private static array $routes=[
         ''=>['HomeController','index'],
+        'test'=>['TestController','index'],
        // 'detail'=>['controllerName','methodName',['id',]],
     ];
 

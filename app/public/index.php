@@ -1,10 +1,8 @@
 <?php
 
-use Editiel98\Autoloader;
 use Editiel98\App;
 
 session_start();
-require __DIR__ . '/../src/Core/Autoloader.php';
-Autoloader::register();
+require_once __DIR__ . '/../vendor/Autoload.php';
 $app = new App();
 $app->run();
