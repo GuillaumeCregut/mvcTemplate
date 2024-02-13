@@ -30,7 +30,6 @@ class RegisterController
             $route = $routeAttribute->newInstance();
             $routes[$className][] = array('path' => $route->getPath(), 'method' => $key, 'datas' => $route->getDatas());
         }
-        var_dump($routes);
         return $routes;
     }
 
