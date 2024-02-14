@@ -4,7 +4,7 @@ Hum, in fact, what it is not ?
 
 It is not a production framework, as if it seems to be.
 
-In fact, this framework is nearly form production use, but it it more a pedagogical projet to understand how Symfony should work.
+In fact, this framework is nearly from production use, but it is more a pedagogical projet to understand how Symfony should work.
 
 And it is still in developpement
 
