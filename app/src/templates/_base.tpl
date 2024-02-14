@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{block name=title}{/block}</title>
     <link rel="stylesheet" href="assets/styles/flash.css">
+    <link rel="stylesheet" href="assets/styles/general.css">
     {block name=styles}
     {/block}
     <script src="assets/scripts/flash.js" defer></script>
@@ -17,7 +18,7 @@
       {include file="partials/_flash.tpl"}
     {/if}
     {block name=body}
-      Hello !
+      Hello ! 
     {/block}
 </body>
 </html>

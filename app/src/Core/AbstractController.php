@@ -2,13 +2,15 @@
 
 namespace Editiel98;
 
-use Editiel98\Chore\Database;
-use Editiel98\Chore\Emitter;
-use Editiel98\Chore\CSRFCheck;
+use Editiel98\Kernel\Database;
+use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Routing\RegisterController;
+use Editiel98\Templates\SmartyEditiel;
+use Exception;
 
 abstract class AbstractController
 {
-    protected SmartyMKD $smarty;
+    protected SmartyEditiel $smarty;
     protected Session $session;
     protected Flash $flash;
     protected Emitter $emitter;
@@ -18,13 +20,12 @@ abstract class AbstractController
     protected int $userId;
     protected int $userRank;
     protected bool $isConnected = false;
-    protected string $fullName ='';
-    protected CSRFCheck $csrfCheck;
+    protected string $fullName = '';
 
     public function __construct()
     {
-        $this->smarty = new SmartyMKD();
-        
+        $this->smarty = new SmartyEditiel();
+
         $this->session = Factory::getSession();
         $this->flash = new Flash();
         $this->hasFlash = $this->flash->hasFlash();
@@ -34,7 +35,6 @@ abstract class AbstractController
         }
         $this->emitter = Emitter::getInstance();
         $this->dbConnection = Database::getInstance();
-        $this->csrfCheck = new CSRFCheck($this->session);
         $this->getCredentials();
     }
 
@@ -46,10 +46,33 @@ abstract class AbstractController
                 $this->isConnected = true;
                 $this->userRank = $this->session->getKey(Session::SESSION_RANK_USER);
                 $this->userId = $this->session->getKey(Session::SESSION_USER_ID);
-                $this->fullName=$this->session->getKey(Session::SESSION_FULLNAME);
+                $this->fullName = $this->session->getKey(Session::SESSION_FULLNAME);
             }
         } else {
             $this->userRank = 0;
         }
+    }
+
+    protected function render(string $filename, array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->smarty->assign($key, $value);
+        }
+        $this->smarty->display($filename);
+    }
+
+    /**
+     * @param string $routeName
+     * 
+     * @return void
+     */
+    protected function redirectTo(string $routeName): void
+    {
+        $routes = RegisterController::getRoutes();
+        if (empty($routes[$routeName])) {
+            throw new Exception('Route does not exists');
+        }
+        header('Location: ' . $routes[$routeName]);
+        die();
     }
 }

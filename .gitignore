@@ -4,3 +4,6 @@ mysql/
 templates_c/
 app/src/logs/*
 !app/src/logs/.gitkeep
+test*.*
+notes.txt
+app/vendor/
