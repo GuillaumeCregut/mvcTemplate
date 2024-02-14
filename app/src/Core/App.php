@@ -3,12 +3,14 @@
 namespace Editiel98;
 
 use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Logger\ErrorLogger;
 use Editiel98\Kernel\Logger\WarnLogger;
 use Editiel98\Kernel\Routing\Routing;
 use Error;
 use Exception;
-
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
 
 class App
 {
@@ -16,9 +18,16 @@ class App
 
     public function run()
     {
+        if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
+            var_dump('démarrage de whoops');
+            $whoops = new Run();
+            $whoops->prependHandler(new PrettyPageHandler());
+            $whoops->register();
+        }
+
         $this->setEmitter();
-        $url=trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '');
-        $controllerInfos=Routing::decodeURI($url);
+        $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '');
+        $controllerInfos = Routing::decodeURI($url);
         if (empty($controllerInfos)) {
             header("HTTP/1.0 404 Not Found");
             echo '404 - Not Found';
@@ -30,13 +39,21 @@ class App
             $method = $controllerInfos['method'];
             $controller->$method(...$controllerInfos['params']);
         } catch (Exception $e) {
-            header("HTTP/1.0 500 Internal Server Error");
-            echo '500 - Internal Server Error';
-            exit();
-        } catch(Error $e) {
-            header("HTTP/1.0 500 Internal Server Error");
-            echo '500 - Internal Server Error';
-            exit();
+            if (isset($whoops)) {
+                echo $whoops->handleException($e);
+            } else {
+                header("HTTP/1.0 500 Internal Server Error");
+                echo '500 - Internal Server Error';
+                exit();
+            }
+        } catch (Error $e) {
+            if (isset($whoops)) {
+                echo $whoops->handleException($e);
+            } else {
+                header("HTTP/1.0 500 Internal Server Error");
+                echo '500 - Internal Server Error';
+                exit();
+            }
         }
     }
 
