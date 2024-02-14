@@ -4,7 +4,9 @@ namespace Editiel98;
 
 use Editiel98\Kernel\Database;
 use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Routing\RegisterController;
 use Editiel98\Templates\SmartyEditiel;
+use Exception;
 
 abstract class AbstractController
 {
@@ -57,5 +59,20 @@ abstract class AbstractController
             $this->smarty->assign($key, $value);
         }
         $this->smarty->display($filename);
+    }
+
+    /**
+     * @param string $routeName
+     * 
+     * @return void
+     */
+    protected function redirectTo(string $routeName): void
+    {
+        $routes = RegisterController::getRoutes();
+        if (empty($routes[$routeName])) {
+            throw new Exception('Route does not exists');
+        }
+        header('Location: ' . $routes[$routeName]);
+        die();
     }
 }
