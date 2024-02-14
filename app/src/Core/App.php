@@ -2,12 +2,13 @@
 
 namespace Editiel98;
 
-use Editiel98\Chore\Emitter;
-use Editiel98\Chore\Logger\ErrorLogger;
-use Editiel98\Chore\Logger\WarnLogger;
-use App\Router\Routing;
+use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Logger\ErrorLogger;
+use Editiel98\Kernel\Logger\WarnLogger;
+use Editiel98\Kernel\Routing\Routing;
 use Error;
 use Exception;
+
 
 class App
 {
@@ -16,17 +17,18 @@ class App
     public function run()
     {
         $this->setEmitter();
-        $controllerInfos = $this->decodeURI();
+        $url=trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '');
+        $controllerInfos=Routing::decodeURI($url);
         if (empty($controllerInfos)) {
             header("HTTP/1.0 404 Not Found");
             echo '404 - Not Found';
             die();
         }
         try {
-            $controllerName = '\\App\\Controller\\' . $controllerInfos[0];
+            $controllerName =  $controllerInfos['controller'];
             $controller = new  $controllerName();
-            $method = $controllerInfos[1];
-            $controller->$method(...$controllerInfos[2]);
+            $method = $controllerInfos['method'];
+            $controller->$method(...$controllerInfos['params']);
         } catch (Exception $e) {
             header("HTTP/1.0 500 Internal Server Error");
             echo '500 - Internal Server Error';
@@ -36,30 +38,6 @@ class App
             echo '500 - Internal Server Error';
             exit();
         }
-    }
-
-
-    /**
-     * Get controller and method from routing
-     * @return array : array with
-     * 0=>controller
-     * 1=>method
-     * 2=>params [key=>alue]
-     */
-    private function decodeURI(): array
-    {
-        $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '', '/');
-        $route = Routing::getRoute($url);
-        if (!$route) {
-            return [];
-        }
-        $parameters = [];
-        foreach ($route[2] ?? [] as $parameter) {
-            if (isset($_GET[$parameter])) {
-                $parameters[] = [$parameter => $_GET[$parameter]];
-            }
-        }
-        return [$route[0], $route[1], $parameters];
     }
 
     /**

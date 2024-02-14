@@ -1,9 +1,9 @@
 <?php
 
-namespace Editiel98\Chore;
+namespace Editiel98\Kernel;
 
-use Editiel98\Chore\Database;
-use Editiel98\Chore\Exception\DbException;
+use Editiel98\Kernel\Database;
+use Editiel98\Kernel\Exception\DbException;
 use Editiel98\Flash;
 use Exception;
 

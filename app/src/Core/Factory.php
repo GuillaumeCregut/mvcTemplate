@@ -2,9 +2,9 @@
 
 namespace Editiel98;
 
-use Editiel98\Chore\Database;
-use Editiel98\Chore\AbstractEntity;
-use Editiel98\Chore\AbstractManager;
+use Editiel98\Kernel\AbstractManager;
+use Editiel98\Kernel\Database;
+use Editiel98\Kernel\Entity\AbstractEntity;
 
 class Factory
 {
