@@ -12,5 +12,7 @@
             "email": "gcregut@free.fr"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "filp/whoops": "^2.15"
+    }
 }
