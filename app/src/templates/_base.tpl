@@ -18,9 +18,7 @@
       {include file="partials/_flash.tpl"}
     {/if}
     {block name=body}
-      Hello ! Bonjour
-      {path route='test'  datas=['id'=>5,'toto'=>'titi']}
-      <a href="{path route='admin'  datas=['id'=>5]}">Test lien</a>
+      Hello ! 
     {/block}
 </body>
 </html>
