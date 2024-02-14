@@ -17,6 +17,15 @@ class RegisterController
     {
         $routes = [];
         $class = new ReflectionClass($controller);
+        $prefix = '';
+        $classRouteName = '';
+        $classAttributes = $class->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class);
+        if (!empty($classAttributes)) {
+            $classRouteAttribute = $classAttributes[0];
+            $classRoute = $classRouteAttribute->newInstance();
+            $classRouteName = $classRoute->getName();
+            $prefix = $classRoute->getPath();
+        }
         $className = $class->getName();
         foreach ($class->getMethods() as $method) {
             if (empty($method->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class)))
@@ -29,14 +38,14 @@ class RegisterController
         }
         foreach ($routeAttributes as $key => $routeAttribute) {
             $route = $routeAttribute->newInstance();
-            $routeName = $route->getName();
-            $routes[$className][] = array('path' => $route->getPath(), 'method' => $key, 'datas' => $route->getDatas(),'name'=>$routeName);
-            self::$displayRoutes[]=array('path' => $route->getPath(),'name'=>$routeName);
+            $routeName = $classRouteName . $route->getName();
+            $routes[$className][] = array('prefix' => $prefix, 'path' => $route->getPath(), 'method' => $key, 'datas' => $route->getDatas(), 'name' => $routeName);
+            self::$displayRoutes[] = array('prefix' => $prefix, 'path' => $route->getPath(), 'name' => $routeName);
         }
         return $routes;
     }
 
-   
+
     /**
      * @return array named array with controller name, methods and params
      */
@@ -60,15 +69,16 @@ class RegisterController
 
     public static function getRoutes(): array
     {
-        $routes=[];
-        foreach(self::$displayRoutes as $key=>$route) {
-            $slugs=self::checkUrlVars($route['path']);
-            $name=$route['name'];
-            $path=$route['path'];
-            if($slugs) {
-                $path=$slugs['path'];
+        $routes = [];
+        foreach (self::$displayRoutes as $key => $route) {
+            $slugs = self::checkUrlVars($route['path']);
+            $name = $route['name'];
+            $path = $route['path'];
+            if ($slugs) {
+                $path = $slugs['path'];
             }
-            $routes[$name]=$path;
+            $prefix = $route['prefix'];
+            $routes[$name] = $prefix . $path;
         }
         return $routes;
     }
@@ -86,13 +96,13 @@ class RegisterController
             foreach ($controllerRoutes as $route) {
                 $slugPresent = self::checkUrlVars($route['path']);
                 $path = $route['path'];
-                if($slugPresent) {
-                    $path=$slugPresent['path'];
-                    $slug=$slugPresent['slug'];
+                if ($slugPresent) {
+                    $path = $slugPresent['path'];
+                    $slug = $slugPresent['slug'];
                 } else {
-                    $slug='';
+                    $slug = '';
                 }
-
+                $path = $route['prefix'] . $path;
                 $method = $route['method'];
                 if (empty($route['datas']))
                     $routes[$path] = array($controllerName, $method, $slug);
@@ -113,9 +123,9 @@ class RegisterController
         if ($start = strpos($url, '{')) {
             if (strpos($url, '}')) {
                 $slug = substr($url, $start + 1, -1);
-                $length=strlen($url)-$start;
-                $path= substr($url,0,$length-1);
-                return array('slug'=>$slug,'path'=>$path);
+                $length = strlen($url) - $start;
+                $path = substr($url, 0, $length - 1);
+                return array('slug' => $slug, 'path' => $path);
             }
         }
         return false;
