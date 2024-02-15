@@ -21,7 +21,7 @@ abstract class Logger implements LoggerInterface
     /**
      * Log a message in the log file
      * @param string $value : message
-     * 
+     *
      * @return bool
      */
     public function storeToFile(string $value): bool

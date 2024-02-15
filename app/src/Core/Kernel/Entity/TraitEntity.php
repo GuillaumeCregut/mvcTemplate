@@ -6,10 +6,9 @@ use Exception;
 
 trait TraitEntity
 {
-
     /**
      * @param array<mixed> $datas
-     * 
+     *
      * @return void
      */
     public function createFromData(array $datas): void

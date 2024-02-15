@@ -7,7 +7,6 @@ namespace Editiel98\Kernel;
  */
 class Emitter
 {
-
     /**
      * @var Emitter
      */
@@ -17,9 +16,9 @@ class Emitter
      */
     private array $listeners = [];
 
-    const DATABASE_ERROR = 'database.error';
-    const DATABASE_WARNING = 'database.warning';
-    const MAIL_ERROR = 'mail.error';
+    public const DATABASE_ERROR = 'database.error';
+    public const DATABASE_WARNING = 'database.warning';
+    public const MAIL_ERROR = 'mail.error';
 
 
     /**
@@ -29,7 +28,7 @@ class Emitter
      */
     public static function getInstance(): Emitter
     {
-        if(is_null(self::$instance)){
+        if (is_null(self::$instance)) {
             self::$instance = new self();
         }
         return self::$instance;
@@ -42,7 +41,7 @@ class Emitter
      *
      * @param string $event
      * @param mixed ...$args
-     * 
+     *
      * @return void
      */
     public function emit(string $event, ...$args): void

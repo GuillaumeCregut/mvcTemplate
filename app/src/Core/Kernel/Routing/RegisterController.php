@@ -14,7 +14,7 @@ class RegisterController
 
     /**
      * @param mixed $controller
-     * 
+     *
      * @return array<mixed>
      */
     private static function registerContoller(mixed $controller): array |false
@@ -32,10 +32,12 @@ class RegisterController
         }
         $className = $class->getName();
         foreach ($class->getMethods() as $method) {
-            if (empty($method->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class)))
+            if (empty($method->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class))) {
                 continue;
+            }
             $methodName = $method->getName();
-            $routeAttributes[$methodName] = $method->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class)[0];
+            $routeAttributes[$methodName] =
+                $method->getAttributes(\Editiel98\Kernel\Attribute\RouteAttribute::class)[0];
         }
         if (empty($routeAttributes)) {
             return false;
@@ -43,7 +45,13 @@ class RegisterController
         foreach ($routeAttributes as $key => $routeAttribute) {
             $route = $routeAttribute->newInstance();
             $routeName = $classRouteName . $route->getName();
-            $routes[$className][] = array('prefix' => $prefix, 'path' => $route->getPath(), 'method' => $key, 'datas' => $route->getDatas(), 'name' => $routeName);
+            $routes[$className][] = array(
+                'prefix' => $prefix,
+                'path' => $route->getPath(),
+                'method' => $key,
+                'datas' => $route->getDatas(),
+                'name' => $routeName
+            );
             self::$displayRoutes[] = array('prefix' => $prefix, 'path' => $route->getPath(), 'name' => $routeName);
         }
         return $routes;
@@ -93,7 +101,7 @@ class RegisterController
     /**
      * @param array<mixed> $routes
      * @param array<mixed> $controller
-     * 
+     *
      * @return void
      */
     private static function storePaths(array &$routes, array $controller): void
@@ -111,17 +119,18 @@ class RegisterController
                 }
                 $path = $route['prefix'] . $path;
                 $method = $route['method'];
-                if (empty($route['datas']))
+                if (empty($route['datas'])) {
                     $routes[$path] = array($controllerName, $method, $slug);
-                else
+                } else {
                     $routes[$path] = array($controllerName, $method, $slug, $route['datas']);
+                }
             }
         }
     }
 
     /**
      * @param string $url
-     * 
+     *
      * @return array<mixed>
      */
     public static function checkUrlVars(string $url): array|false

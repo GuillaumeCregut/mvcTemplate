@@ -10,15 +10,18 @@ class PathPlugin extends AbstractPlugin
 
     public static function display($params, $smarty)
     {
-        if (empty($params['route']))
+        if (empty($params['route'])) {
             return '';
+        }
         $route = $params['route'];
         $routes = RegisterController::getRoutes();
-        if (empty($routes[$route]))
+        if (empty($routes[$route])) {
             return '';
+        }
         $routeToShow = $routes[$route];
-        if (!empty($params['slug']))
+        if (!empty($params['slug'])) {
             $routeToShow .= '/' . $params['slug'];
+        }
         if (!empty($params['datas'])) {
             $datas = $params['datas'];
             $first = true;

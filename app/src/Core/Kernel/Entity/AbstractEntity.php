@@ -10,6 +10,7 @@ use Exception;
 abstract class AbstractEntity
 {
     use TraitEntity;
+
     protected int $id;
     /**
      * @var array<mixed>
@@ -45,7 +46,7 @@ abstract class AbstractEntity
 
     /**
      * @param mixed $name
-     * 
+     *
      * @return mixed
      */
     public function __get($name): mixed
@@ -53,14 +54,15 @@ abstract class AbstractEntity
         $method = 'get' .  ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method();
-        } else
+        } else {
             return null;
+        }
     }
 
     /**
      * @param mixed $name
      * @param mixed $value
-     * 
+     *
      */
     public function __set($name, $value)
     {
@@ -68,7 +70,8 @@ abstract class AbstractEntity
         $method = 'set' . ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method($value);
-        } else
+        } else {
             throw new Exception('Method not found');
+        }
     }
 }

@@ -21,7 +21,7 @@ class FileField extends AbstractField
         private ?bool $multiple = false
     ) {
         parent::__construct($name, $id, $required);
-        $this->accept=$accept;
+        $this->accept = $accept;
     }
 
     /**

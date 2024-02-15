@@ -6,7 +6,7 @@ use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\Exception\DbException;
 use Editiel98\Kernel\GetEnv;
 use Exception;
-use \PDO;
+use PDO;
 use PDOException;
 
 /**
@@ -27,7 +27,7 @@ class Database
     /**
      * @var Database
      */
-    private static $_instance;
+    private static $instance;
 
     public function __construct()
     {
@@ -42,17 +42,17 @@ class Database
      */
     public static function getInstance(): self
     {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new Database;
+        if (is_null(self::$instance)) {
+            self::$instance = new Database();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
      * getConnect
      * create pdo Connection
      *
-     * @return pdo 
+     * @return pdo
      */
     public function getConnect()
     {
@@ -61,7 +61,12 @@ class Database
                 $options = array(
                     PDO::MYSQL_ATTR_INIT_COMMAND => "set lc_time_names = 'fr_FR'"
                 );
-                $this->pdo = new PDO('mysql:dbname=' . $this->name . ';host=' . $this->host . '; port=' . $this->port . 'charset=UTF8', $this->user, $this->pass, $options);
+                $this->pdo = new PDO(
+                    'mysql:dbname=' . $this->name . ';host=' . $this->host . '; port=' . $this->port . 'charset=UTF8',
+                    $this->user,
+                    $this->pass,
+                    $options
+                );
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
                 $errCode = $e->getCode();
@@ -107,7 +112,7 @@ class Database
     {
         try {
             $req = $this->getConnect()->query($statement);
-            if(!$req) {
+            if (!$req) {
                 throw new Exception('Database connection error');
             }
             if (is_null($className)) {
@@ -131,7 +136,7 @@ class Database
      * prepare
      *
      * prepare a PDO request and execute it
-     * 
+     *
      * @param string $statement : SQL query
      * @param string|null $className : class of result if exist
      * @param array<mixed>|null $values : array of bind values
@@ -193,7 +198,7 @@ class Database
      *
      * @param string $statement : SQL query
      * @param array<mixed> $values : binding values
-     * @return bool|int : bool or int 
+     * @return bool|int : bool or int
      */
     public function exec(string $statement, array $values): bool | int
     {

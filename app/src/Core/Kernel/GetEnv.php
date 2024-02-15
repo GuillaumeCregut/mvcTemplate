@@ -8,7 +8,7 @@ class GetEnv
 {
     /**
      * @param string $value
-     * 
+     *
      * @return string
      */
     public static function getEnvValue(string $value): string

@@ -39,7 +39,7 @@ class Mailer
     }
 
     /**
-     * Function SendMail : 
+     * Function SendMail :
      * Send an email with all  infos filled
      *
      * @param string $to

@@ -12,7 +12,7 @@ class Factory
     /**
      * @var Factory
      */
-    private static  $_instance;
+    private static $instance;
     /**
      * @var Database
      */
@@ -32,16 +32,16 @@ class Factory
      */
     public static function getInstance(): self
     {
-        if (!is_null(self::$_instance)) {
-            self::$_instance = new Factory();
+        if (!is_null(self::$instance)) {
+            self::$instance = new Factory();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     /**
-     * return a new Entity 
+     * return a new Entity
      * @param string $name : name of entity to create
-     * 
+     *
      * @return AbstractEntity
      *//*
     public static function getEntity(string $name): AbstractEntity
@@ -66,7 +66,7 @@ class Factory
 
     /**
      * @param string $name
-     * 
+     *
      * @return AbstractManager
      *//*
     public static function getManager(string $name): AbstractManager

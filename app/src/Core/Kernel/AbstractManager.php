@@ -39,10 +39,10 @@ abstract class AbstractManager
         $this->db = $db;
     }
 
-   
+
     /**
      * @param mixed $name
-     * 
+     *
      * @return mixed
      */
     public function __get($name): mixed
@@ -96,5 +96,4 @@ abstract class AbstractManager
             throw new Exception('Une erreur est survenue');
         }
     }
-
 }

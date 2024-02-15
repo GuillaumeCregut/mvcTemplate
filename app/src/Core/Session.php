@@ -6,16 +6,17 @@ use Editiel98\Interfaces\SessionInterface;
 
 class Session implements SessionInterface
 {
-    const SESSION_CONNECTED = 'isConnected';
-    const SESSION_FULLNAME = 'fullName';
-    const SESSION_RANK_USER = 'rankUser';
-    const SESSION_USER_ID = 'userId';
+    public const SESSION_CONNECTED = 'isConnected';
+    public const SESSION_FULLNAME = 'fullName';
+    public const SESSION_RANK_USER = 'rankUser';
+    public const SESSION_USER_ID = 'userId';
 
 
     public function __construct()
     {
-        if (session_status() === PHP_SESSION_NONE)
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
+        }
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Editiel98\Kernel\Routing;
 
 class RoutesDisplay
 {
-
     /**
      * @var array<mixed>
      */
@@ -26,13 +25,15 @@ class RoutesDisplay
 
     /**
      * @param string $route
-     * 
+     *
      * @return string
      */
     public function getRoute(string $route): string |null
     {
         if (key_exists($route, $this->routes)) {
             return $this->routes[$route];
-        } else return null;
+        } else {
+            return null;
+        }
     }
 }

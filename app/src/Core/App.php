@@ -61,23 +61,30 @@ class App
 
     /**
      * Loads emitters
+     *
      * @return void
      */
     private function setEmitter(): void
     {
         $this->emitter = Emitter::getInstance();
-        $this->emitter->on(Emitter::DATABASE_ERROR, function ($message) {
-            $logger = new ErrorLogger();
-            if ($logger->storeToFile($message)) {
-                $logger = null;
+        $this->emitter->on(
+            Emitter::DATABASE_ERROR,
+            function ($message) {
+                $logger = new ErrorLogger();
+                if ($logger->storeToFile($message)) {
+                    $logger = null;
+                }
             }
-        });
-        $this->emitter->on(Emitter::MAIL_ERROR, function ($to) {
-            $logger = new WarnLogger();
-            $message = "L'envoi du mail à " . $to . ' a échoué';
-            if ($logger->storeToFile($message)) {
-                $logger = null;
+        );
+        $this->emitter->on(
+            Emitter::MAIL_ERROR,
+            function ($to) {
+                $logger = new WarnLogger();
+                $message = "L'envoi du mail à " . $to . ' a échoué';
+                if ($logger->storeToFile($message)) {
+                    $logger = null;
+                }
             }
-        });
+        );
     }
 }

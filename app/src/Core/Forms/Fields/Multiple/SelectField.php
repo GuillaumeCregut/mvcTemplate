@@ -73,7 +73,7 @@ class SelectField extends AbstractField
     /**
      * @param string $display
      * @param string $value
-     * 
+     *
      * @return self
      */
     public function addOption(string $display, string $value): self
@@ -84,7 +84,7 @@ class SelectField extends AbstractField
 
     /**
      * @param string $id
-     * 
+     *
      * @return self
      */
     public function removeOption(string $id): self

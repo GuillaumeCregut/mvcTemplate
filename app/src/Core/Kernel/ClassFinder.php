@@ -6,22 +6,22 @@ use Exception;
 
 class ClassFinder
 {
-    const APP_ROOT = __DIR__ . '/../../../';
+    private const APP_ROOT = __DIR__ . '/../../../';
 
 
     /**
      * @param string $namespace
-     * 
+     *
      * @return array<mixed>
      */
     public static function getClassesInNamespace(string $namespace): array
     {
-        $nameSpaceDirectory=self::getNamespaceDirectory($namespace);
-        if(! $nameSpaceDirectory){
+        $nameSpaceDirectory = self::getNamespaceDirectory($namespace);
+        if (!$nameSpaceDirectory) {
             throw new Exception('No namespace directory found');
         }
-        $files = scandir( $nameSpaceDirectory);
-        if(!$files) {
+        $files = scandir($nameSpaceDirectory);
+        if (!$files) {
             throw new Exception('No class files found');
         }
         $classes = array_map(function ($file) use ($namespace) {
@@ -39,8 +39,8 @@ class ClassFinder
     private static function getDefinedNamespaces(): array
     {
         $composerJsonPath = self::APP_ROOT . 'composer.json';
-        $composerJson=file_get_contents($composerJsonPath);
-        if(!$composerJson) {
+        $composerJson = file_get_contents($composerJsonPath);
+        if (!$composerJson) {
             throw new Exception('No JSON file found');
         }
         $composerConfig = json_decode($composerJson);
@@ -51,7 +51,7 @@ class ClassFinder
 
     /**
      * @param string $namespace
-     * 
+     *
      * @return string|false
      */
     private static function getNamespaceDirectory(string $namespace): string|false
@@ -62,8 +62,10 @@ class ClassFinder
         while ($namespaceFragments) {
             $possibleNamespace = implode('\\', $namespaceFragments) . '\\';
             if (array_key_exists($possibleNamespace, $composerNamespaces)) {
-
-                return realpath(self::APP_ROOT . $composerNamespaces[$possibleNamespace] . '/' . implode('/', $undefinedNamespaceFragments));
+                return realpath(
+                    self::APP_ROOT . $composerNamespaces[$possibleNamespace] . '/'
+                        . implode('/', $undefinedNamespaceFragments)
+                );
             }
 
             array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));

@@ -59,7 +59,7 @@ abstract class AbstractController
     /**
      * @param string $filename
      * @param array<mixed> $values
-     * 
+     *
      * @return void
      */
     protected function render(string $filename, ?array $values = []): void
@@ -73,7 +73,7 @@ abstract class AbstractController
 
     /**
      * @param string $routeName
-     * 
+     *
      * @return void
      */
     protected function redirectTo(string $routeName): void
