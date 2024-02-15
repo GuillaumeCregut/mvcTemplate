@@ -23,7 +23,36 @@ class SmartyEditiel extends \Smarty
       $this->getPlugin();
    }
 
-   private function getPlugin()
+   public function fetchTemplate(string $filename): string
+   {
+      return parent::fetch($filename);
+   }
+
+   /**
+    * @param string $filename
+    * 
+    * @return void
+    */
+   public function displayTemplate(string $filename): void
+   {
+      parent::display($filename);
+   }
+
+   /**
+    * @param string $tpl_var
+    * @param mixed $tpl_value
+    * 
+    * @return void
+    */
+   public function assignVar(string $tpl_var, mixed $tpl_value): void
+   {
+      parent::assign($tpl_var,$tpl_value);
+   }
+
+   /**
+    * @return void
+    */
+   private function getPlugin(): void
    {
       $plugins = ClassFinder::getClassesInNamespace('Editiel98\\Templates');
       foreach ($plugins as $plugin) {

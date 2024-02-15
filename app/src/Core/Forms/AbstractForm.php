@@ -15,14 +15,33 @@ abstract class AbstractForm
     protected string $token = '';
     protected string $method = '';
     protected string $action = '';
+    /**
+     * @var array<AbstractField>
+     */
     protected array $fields = [];
     protected string $class = '';
     protected string $id = "";
+
+    /**
+     * @var array<mixed>
+     */
     protected array $dataset = [];
+     /**
+     * @var array<mixed>
+     */
     protected array $datas = [];
     protected bool $multipart;
+     /**
+     * @var array<mixed>
+     */
     protected array $inputsDatas = [];
+     /**
+     * @var array<mixed>
+     */
     protected array $errorFields = [];
+     /**
+     * @var array<mixed>
+     */
     protected array $errorFiles = [];
 
     private CSRFCheck $csrfCheck;
@@ -89,16 +108,20 @@ abstract class AbstractForm
         return "</form>";
     }
 
+    
     /**
-     * Get the value of dataset
+     * @return array<mixed>
      */
     public function getDataset(): array
     {
         return $this->dataset;
     }
 
+   
     /**
-     * Set the value of dataset
+     * @param array<mixed> $dataset
+     * 
+     * @return self
      */
     public function addDataset(array $dataset): self
     {
@@ -133,8 +156,11 @@ abstract class AbstractForm
         return $this->id;
     }
 
+    
     /**
-     * Set the value of id
+     * @param string $id
+     * 
+     * @return self
      */
     public function setId(string $id): self
     {
@@ -143,13 +169,16 @@ abstract class AbstractForm
         return $this;
     }
 
+    /**
+     * @return array<AbstractField>
+     */
     public function getFields(): array
     {
         return $this->fields;
     }
 
     /**
-     * @param array $datas  datas from HTML form
+     * @param array<mixed> $datas  datas from HTML form
      * 
      * @return bool datas are OK
      */
@@ -170,7 +199,7 @@ abstract class AbstractForm
     }
 
     /**
-     * @param array $datas datas from HTML form
+     * @param array<mixed> $datas datas from HTML form
      * 
      * @return bool datas are OK
      */
@@ -333,9 +362,9 @@ abstract class AbstractForm
     }
 
     /**
-     * @param array $filesDL
+     * @param array<mixed> $filesDL
      * 
-     * @return array
+     * @return array<mixed>
      */
     private function orderFiles(array $filesDL): array
     {
@@ -355,8 +384,9 @@ abstract class AbstractForm
     }
 
 
+   
     /**
-     * Get the value of InputsDatas
+     * @return array<mixed>|false
      */
     public function getInputsDatas(): array|false
     {
@@ -365,8 +395,9 @@ abstract class AbstractForm
         return $this->inputsDatas;
     }
 
+    
     /**
-     * Get the value of errorFields
+     * @return array<mixed>
      */
     public function getErrorFields(): array
     {
@@ -390,8 +421,9 @@ abstract class AbstractForm
         }
     }
 
+    
     /**
-     * Get the value of errorFiles
+     * @return array<mixed>
      */
     public function getErrorFiles(): array
     {

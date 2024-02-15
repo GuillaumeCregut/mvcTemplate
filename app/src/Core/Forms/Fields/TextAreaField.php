@@ -7,9 +7,9 @@ class TextAreaField extends AbstractField
     protected string $typeOf = self::TYPE_STRING;
     private string $value;
 
-    public function __construct(string $name, string $id, ?bool $required=true,?string $value)
+    public function __construct(string $name, string $id, ?bool $required = true, ?string $value=null)
     {
-        parent::__construct($name, $id,$required);
+        parent::__construct($name, $id, $required);
         $this->value = $value;
     }
 

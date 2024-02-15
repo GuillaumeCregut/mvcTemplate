@@ -20,20 +20,27 @@ class Database
     private string $name;
     private string $pass;
     private string $port;
+    /**
+     * @var PDO
+     */
     private $pdo;
+    /**
+     * @var Database
+     */
     private static $_instance;
 
     public function __construct()
     {
         $this->loadCredentials();
     }
+
     /**
      * getInstance
      * create singleton for database connection
      *
-     * @return instance of pdo connection
+     * @return self
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (is_null(self::$_instance)) {
             self::$_instance = new Database;
@@ -49,7 +56,7 @@ class Database
      */
     public function getConnect()
     {
-        if ($this->pdo === null) {
+        if (is_null($this->pdo)) {
             try {
                 $options = array(
                     PDO::MYSQL_ATTR_INIT_COMMAND => "set lc_time_names = 'fr_FR'"
@@ -94,12 +101,15 @@ class Database
      *
      * @param string $statement : SQL query
      * @param string|null $className : class type of result if exists
-     * @return array
+     * @return array<mixed>
      */
     public function query(string $statement, ?string $className = null): array
     {
         try {
             $req = $this->getConnect()->query($statement);
+            if(!$req) {
+                throw new Exception('Database connection error');
+            }
             if (is_null($className)) {
                 $datas = $req->fetchAll(PDO::FETCH_OBJ);
             } else {
@@ -124,7 +134,7 @@ class Database
      * 
      * @param string $statement : SQL query
      * @param string|null $className : class of result if exist
-     * @param array|null $values : array of bind values
+     * @param array<mixed>|null $values : array of bind values
      * @param boolean|null $single : return unique data or set of datas
      * @return mixed : array or object
      */
@@ -182,8 +192,8 @@ class Database
      * execute a prepared PDO request
      *
      * @param string $statement : SQL query
-     * @param array $values : binding values
-     * @return mixed : bool or int 
+     * @param array<mixed> $values : binding values
+     * @return bool|int : bool or int 
      */
     public function exec(string $statement, array $values): bool | int
     {

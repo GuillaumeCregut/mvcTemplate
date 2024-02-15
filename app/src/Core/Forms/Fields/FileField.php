@@ -5,17 +5,28 @@ namespace Editiel98\Forms\Fields;
 class FileField extends AbstractField
 {
     protected string $typeOf = self::TYPE_FILE;
+    /**
+     * @var array<mixed>
+     */
+    private array $accept = [];
 
+    /**
+     * @param array<mixed> $accept
+     */
     public function __construct(
         string $name,
         string $id,
         ?bool $required = true,
-        private ?array $accept = [],
+        ?array $accept = [],
         private ?bool $multiple = false
     ) {
         parent::__construct($name, $id, $required);
+        $this->accept=$accept;
     }
 
+    /**
+     * @return string
+     */
     public function display(): string
     {
         $displayError = $this->error ? 'error_field' : '';
@@ -45,6 +56,9 @@ class FileField extends AbstractField
         return $label . $input . '</label>';
     }
 
+    /**
+     * @return string
+     */
     public function getTypeOf(): string
     {
         return $this->typeOf;

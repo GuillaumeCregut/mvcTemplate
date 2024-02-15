@@ -6,19 +6,25 @@ use Exception;
 
 trait TraitEntity
 {
-    public function createFromData(array $datas)
+
+    /**
+     * @param array<mixed> $datas
+     * 
+     * @return void
+     */
+    public function createFromData(array $datas): void
     {
         var_dump($datas);
-        try{
-        foreach ($datas as $name => $field) {
-            if (property_exists($this::class, $name)) {
-                $this->$name = $field;
-            } else {
-                echo "Passe pas $name";
+        try {
+            foreach ($datas as $name => $field) {
+                if (property_exists($this::class, $name)) {
+                    $this->$name = $field;
+                } else {
+                    echo "Passe pas $name";
+                }
             }
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
         }
-    } catch(Exception $e) {
-        var_dump($e->getMessage());
-    }
     }
 }

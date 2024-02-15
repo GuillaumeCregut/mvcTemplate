@@ -39,13 +39,13 @@ abstract class AbstractManager
         $this->db = $db;
     }
 
+   
     /**
-     * Magic function for getters
-     *
-     * @param [type] $name
-     * @return void
+     * @param mixed $name
+     * 
+     * @return mixed
      */
-    public function __get($name)
+    public function __get($name): mixed
     {
         $method = 'get' . ucfirst($name);
         return $this->$method();
@@ -55,7 +55,7 @@ abstract class AbstractManager
      * Exec the query
      *
      * @param string $query : Query to execute
-     * @param array $vars : vars for the query
+     * @param array<mixed> $vars : vars for the query
      * @return mixed
      */
     protected function execSQL(string $query, array $vars): mixed
@@ -80,7 +80,7 @@ abstract class AbstractManager
      * Execute a prepared query
      *
      * @param string $query : query to execute
-     * @param array $vars : vars for the query
+     * @param array<mixed> $vars : vars for the query
      * @param boolean $single : return one result or not
      * @return mixed
      */

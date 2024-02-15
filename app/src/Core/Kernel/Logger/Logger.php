@@ -45,7 +45,7 @@ abstract class Logger implements LoggerInterface
 
     /**
      * Load logs from files and return them
-     * @return array
+     * @return array<mixed>|bool
      */
     public function loadFromFile(): array|bool
     {

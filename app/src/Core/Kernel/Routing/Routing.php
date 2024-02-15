@@ -9,15 +9,15 @@ class Routing
     const SLUG = 2;
     const PARAMS = 3;
 
+    
     /**
-     * Get controller for route
      * @param string $url
+     * @param array<mixed> $routes
      * 
-     * @return array
+     * @return array<mixed>
      */
     private static function getRoute(string $url, array $routes): array|false
     {
-
         if (!key_exists($url, $routes)) {
             //Check Slug
             $slugs = self::checkSlug($url);
@@ -35,17 +35,24 @@ class Routing
         return $routes[$url];
     }
 
+   
     /**
-     * Get controller and method from routing
-     * @return array : array with
+     * Return the controller method and params for specific url
+     * @param mixed $urlToFind
+     * 
+     * @return array<mixed>
      * 0=>controller
      * 1=>method
      * 2=>slug
      * 3=>params [key=>alue]
      */
-    public static function decodeURI($url): array
+    public static function decodeURI($urlToFind): array
     {
-        //$url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '');
+        $rawUrl=parse_url($urlToFind, PHP_URL_PATH);
+        if(!$rawUrl){
+            $rawUrl='';
+        }
+        $url = trim($rawUrl);
         $routes = RegisterController::getControllers();
         //Check slug
         $route = self::getRoute($url, $routes);
@@ -64,7 +71,8 @@ class Routing
         foreach ($route[self::PARAMS] ?? [] as $parameter) {
             if (isset($_GET[$parameter])) {
                 $parameters[$parameter] =  $_GET[$parameter];
-                unset($route[self::PARAMS][$key]);
+                if(isset($key))
+                    unset($route[self::PARAMS][$key]);
             }
         }
         return ['controller' => $route[self::CONTROLLER], 'method' => $route[self::METHOD], 'slug' => '', 'params' => $parameters];
@@ -73,10 +81,14 @@ class Routing
     /**
      * @param string $url
      * 
-     * @return array
+     * @return array<mixed>
      */
     private static function checkSlug(string $url): array
     {
-        return array('url' => substr($url, 0, strrpos($url, '/')), 'slug' => substr($url, strrpos($url, '/') + 1));
+        $pos=strrpos($url, '/');
+        if(!$pos){
+            $pos=null;
+        }
+        return array('url' => substr($url, 0,  $pos), 'slug' => substr($url,  $pos + 1));
     }
 }

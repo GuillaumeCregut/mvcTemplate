@@ -7,13 +7,17 @@ use ReflectionClass;
 
 class RegisterController
 {
-    private static array $displayRoutes;
     /**
-     * @param string $controller
-     * 
-     * @return array
+     * @var array<mixed>
      */
-    private static function registerContoller(string $controller): array |false
+    private static array $displayRoutes;
+
+    /**
+     * @param mixed $controller
+     * 
+     * @return array<mixed>
+     */
+    private static function registerContoller(mixed $controller): array |false
     {
         $routes = [];
         $class = new ReflectionClass($controller);
@@ -47,7 +51,7 @@ class RegisterController
 
 
     /**
-     * @return array named array with controller name, methods and params
+     * @return array<mixed> named array with controller name, methods and params
      */
     public static function getControllers(): array
     {
@@ -67,6 +71,9 @@ class RegisterController
     }
 
 
+    /**
+     * @return array<mixed>
+     */
     public static function getRoutes(): array
     {
         $routes = [];
@@ -84,8 +91,8 @@ class RegisterController
     }
 
     /**
-     * @param array $routes
-     * @param array $controller
+     * @param array<mixed> $routes
+     * @param array<mixed> $controller
      * 
      * @return void
      */
@@ -115,7 +122,7 @@ class RegisterController
     /**
      * @param string $url
      * 
-     * @return array
+     * @return array<mixed>
      */
     public static function checkUrlVars(string $url): array|false
     {

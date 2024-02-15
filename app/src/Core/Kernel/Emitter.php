@@ -8,7 +8,13 @@ namespace Editiel98\Kernel;
 class Emitter
 {
 
+    /**
+     * @var Emitter
+     */
     private static $instance;
+    /**
+     * @var array<mixed>
+     */
     private array $listeners = [];
 
     const DATABASE_ERROR = 'database.error';
@@ -23,20 +29,23 @@ class Emitter
      */
     public static function getInstance(): Emitter
     {
-        if (!self::$instance) {
+        if(is_null(self::$instance)){
             self::$instance = new self();
         }
         return self::$instance;
     }
 
+
+
     /**
      * Emit an event to be listen
      *
      * @param string $event
-     * @param [type] ...$args
+     * @param mixed ...$args
+     * 
      * @return void
      */
-    public function emit(string $event, ...$args)
+    public function emit(string $event, ...$args): void
     {
         if ($this->hasListener($event)) {
             foreach ($this->listeners[$event] as $listener) {

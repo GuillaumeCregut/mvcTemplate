@@ -3,7 +3,7 @@
 namespace Editiel98\Kernel;
 
 use Editiel98\Kernel\Emitter;
-use Editiel98\SmartyMKD;
+use Editiel98\Templates\SmartyEditiel;
 use Exception;
 
 /**
@@ -12,15 +12,15 @@ use Exception;
 class Mailer
 {
     private string $adminMail;
-    private SmartyMKD $smarty;
+    private SmartyEditiel $smarty;
 
     public function __construct()
     {
         $this->loadParams();
-        $this->smarty = new SmartyMKD();
+        $this->smarty = new SmartyEditiel();
     }
 
-    
+
     /**
      * Load config file
      * @return void
@@ -28,14 +28,12 @@ class Mailer
     private function loadParams(): void
     {
         try {
-            $envMode=GetEnv::getEnvValue('envMode');
+            $envMode = GetEnv::getEnvValue('envMode');
             if ($envMode == 'debug') {
                 ini_set('SMTP', '192.168.1.10');
             }
             $this->adminMail = GetEnv::getEnvValue('mailadmin');
         } catch (Exception $e) {
-            $errCode = $e->getCode();
-            $errMessage = $e->getMessage();
             throw new Exception('Impossible de lire les credentials');
         }
     }
@@ -68,6 +66,7 @@ class Mailer
             }
             return $mailSent;
         } catch (Exception $e) {
+            return false;
         }
     }
     /**
@@ -89,7 +88,7 @@ class Mailer
      *
      * @param string $from mail sender
      * @param string $subject subject of mail
-     * @param array $values to put in template
+     * @param array<mixed> $values to put in template
      * @param string $template HTML template of the mail
      * @return boolean
      */
@@ -97,9 +96,9 @@ class Mailer
     {
         $MailTemplate = 'mail/' . $template . '.tpl';
         foreach ($values as $k => $v) {
-            $this->smarty->assign($k, $v);
+            $this->smarty->assignVar($k, $v);
         }
-        $content = $this->smarty->fetch($MailTemplate);
+        $content = $this->smarty->fetchTemplate($MailTemplate);
         return $this->sendMail($this->adminMail, $from, $subject, $content, true);
     }
 
@@ -122,7 +121,7 @@ class Mailer
      *
      * @param string $to
      * @param string $subject
-     * @param array $values : values to place in template as['templateValue'=>value]
+     * @param array<mixed> $values : values to place in template as['templateValue'=>value]
      * @param string $template
      * @return boolean
      */
@@ -130,9 +129,9 @@ class Mailer
     {
         $MailTemplate = 'mail/' . $template . '.tpl';
         foreach ($values as $k => $v) {
-            $this->smarty->assign($k, $v);
+            $this->smarty->assignVar($k, $v);
         }
-        $content = $this->smarty->fetch($MailTemplate);
+        $content = $this->smarty->fetchTemplate($MailTemplate);
         return $this->sendMail($to, $this->adminMail, $subject, $content, true);
     }
 }

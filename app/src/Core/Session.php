@@ -40,7 +40,7 @@ class Session implements SessionInterface
      * @param mixed $value : value to store
      * @return void
      */
-    public function setKey(string $key, mixed $value)
+    public function setKey(string $key, mixed $value): void
     {
         $_SESSION[$key] = $value;
     }
@@ -52,7 +52,7 @@ class Session implements SessionInterface
      * @param mixed $value : values to store for the key
      * @return void
      */
-    public function setMultipleKey(string $key, mixed $value)
+    public function setMultipleKey(string $key, mixed $value): void
     {
         $_SESSION[$key][] = $value;
     }
@@ -63,7 +63,7 @@ class Session implements SessionInterface
      * @param string $key : key to remove
      * @return void
      */
-    public function deleteKey(string $key)
+    public function deleteKey(string $key): void
     {
         unset($_SESSION[$key]);
     }

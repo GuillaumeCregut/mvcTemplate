@@ -11,11 +11,13 @@ abstract class AbstractEntity
 {
     use TraitEntity;
     protected int $id;
-    protected array $datas=[];
+    /**
+     * @var array<mixed>
+     */
+    protected array $datas = [];
 
     public function __construct()
     {
-    
     }
 
     /**
@@ -36,24 +38,37 @@ abstract class AbstractEntity
         return $this;
     }
 
+    /**
+     * @return array<mixed>
+     */
     abstract public function getDatasForForm(): array;
 
-    public function __get($name) {
-        $method='get' .  ucfirst($name);
-        if(method_exists($this,$method)) {
+    /**
+     * @param mixed $name
+     * 
+     * @return mixed
+     */
+    public function __get($name): mixed
+    {
+        $method = 'get' .  ucfirst($name);
+        if (method_exists($this, $method)) {
             return $this->$method();
-        }
+        } else
+            return null;
     }
 
-    public function __set($name,$value)
+    /**
+     * @param mixed $name
+     * @param mixed $value
+     * 
+     */
+    public function __set($name, $value)
     {
         echo "Set $name a la valeur $value";
-        $method='set'.ucfirst($name);
-        if(method_exists($this,$method)) {
+        $method = 'set' . ucfirst($name);
+        if (method_exists($this, $method)) {
             return $this->$method($value);
         } else
             throw new Exception('Method not found');
-
     }
-   
 }

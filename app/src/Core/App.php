@@ -16,7 +16,10 @@ class App
 {
     private Emitter $emitter;
 
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
         if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
             var_dump('démarrage de whoops');
@@ -26,8 +29,7 @@ class App
         }
 
         $this->setEmitter();
-        $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '');
-        $controllerInfos = Routing::decodeURI($url);
+        $controllerInfos = Routing::decodeURI($_SERVER['REQUEST_URI']);
         if (empty($controllerInfos)) {
             header("HTTP/1.0 404 Not Found");
             echo '404 - Not Found';
