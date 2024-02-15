@@ -62,7 +62,7 @@ abstract class AbstractController
      * 
      * @return void
      */
-    protected function render(string $filename, array $values): void
+    protected function render(string $filename, ?array $values = []): void
     {
         foreach ($values as $key => $value) {
             $this->smarty->assignVar($key, $value);
