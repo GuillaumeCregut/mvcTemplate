@@ -14,6 +14,7 @@
     ],
     "require-dev": {
         "filp/whoops": "^2.15",
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^1.10",
+        "squizlabs/php_codesniffer": "*"
     }
 }
