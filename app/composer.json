@@ -15,6 +15,7 @@
     "require-dev": {
         "filp/whoops": "^2.15",
         "phpstan/phpstan": "^1.10",
-        "squizlabs/php_codesniffer": "*"
+        "squizlabs/php_codesniffer": "*",
+        "phpmd/phpmd": "^2.15"
     }
 }
