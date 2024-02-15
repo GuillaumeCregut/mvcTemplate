@@ -6,11 +6,14 @@
                      http://pmd.sf.net/ruleset_xml_schema.xsd"
          xsi:noNamespaceSchemaLocation="
                      http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>
+        My rulsets
+    </description>
     <rule ref="rulesets/cleancode.xml" >
         <exclude name="ElseExpression" />
         <exclude name="StaticAccess" />
+        <exclude name="BooleanArgumentFlag" />
     </rule>
-    <rule ref="rulesets/codesize.xml" />
     <rule ref="rulesets/controversial.xml" >
         <exclude name="Superglobals" />
     </rule>
@@ -23,15 +26,15 @@
             <property name="minimum" value="20" />
         </properties>
     </rule>
-    <rule ref="rulesets/naming.xml" >
-        <exclude name="ShortVariable" />
-    </rule>
-    <rule ref="rulesets/naming.xml/ShortVariable">
+    <rule ref="rulesets/naming.xml">
         <properties>
             <property name="exceptions" value="id,db" />
         </properties>
+        <exclude name="ShortVariable" />
+        <exclude name="LongVariable" />
+        <exclude name="ShortMethodName" />
     </rule>
     <rule ref="rulesets/unusedcode.xml" />
 
-    <exclude-pattern>src/Migrations</exclude-pattern>
+    
 </ruleset>
