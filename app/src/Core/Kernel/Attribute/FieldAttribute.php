@@ -9,7 +9,7 @@ class FieldAttribute
 {
     public function __construct(
         private string $type,
-        private ?bool $AllowBlank = false
+        private ?bool $allowBlank = false
     ) {
     }
 
@@ -32,6 +32,6 @@ class FieldAttribute
          */
     public function isAllowBlank(): ?bool
     {
-            return $this->AllowBlank;
+            return $this->allowBlank;
     }
 }

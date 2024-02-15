@@ -85,7 +85,7 @@ class RegisterController
     public static function getRoutes(): array
     {
         $routes = [];
-        foreach (self::$displayRoutes as $key => $route) {
+        foreach (self::$displayRoutes as $route) {
             $slugs = self::checkUrlVars($route['path']);
             $name = $route['name'];
             $path = $route['path'];
@@ -136,7 +136,8 @@ class RegisterController
     public static function checkUrlVars(string $url): array|false
     {
         $slug = '';
-        if ($start = strpos($url, '{')) {
+        $start = $start = strpos($url, '{');
+        if ($start) {
             if (strpos($url, '}')) {
                 $slug = substr($url, $start + 1, -1);
                 $length = strlen($url) - $start;

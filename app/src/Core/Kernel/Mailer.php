@@ -79,8 +79,8 @@ class Mailer
      */
     public function sendMailToAdmin(string $from, string $subject, string $message): bool
     {
-        $MessageMail = wordwrap($message, 70, '\n');
-        return $this->sendMail($this->adminMail, $from, $subject, $MessageMail, false);
+        $messageMail = wordwrap($message, 70, '\n');
+        return $this->sendMail($this->adminMail, $from, $subject, $messageMail, false);
     }
 
     /**
@@ -94,11 +94,11 @@ class Mailer
      */
     public function sendHTMLMailToAdmin(string $from, string $subject, array $values, string $template): bool
     {
-        $MailTemplate = 'mail/' . $template . '.tpl';
+        $mailTemplate = 'mail/' . $template . '.tpl';
         foreach ($values as $k => $v) {
             $this->smarty->assignVar($k, $v);
         }
-        $content = $this->smarty->fetchTemplate($MailTemplate);
+        $content = $this->smarty->fetchTemplate($mailTemplate);
         return $this->sendMail($this->adminMail, $from, $subject, $content, true);
     }
 
@@ -112,8 +112,8 @@ class Mailer
      */
     public function sendMailToUser(string $to, string $subject, string $message): bool
     {
-        $MessageMail = wordwrap($message, 70, '\r\n');
-        return $this->sendMail($to, $this->adminMail, $subject, $MessageMail, false);
+        $messageMail = wordwrap($message, 70, '\r\n');
+        return $this->sendMail($to, $this->adminMail, $subject, $messageMail, false);
     }
 
     /**
@@ -127,11 +127,11 @@ class Mailer
      */
     public function sendHTMLMailToUser(string $to, string $subject, array $values, string $template): bool
     {
-        $MailTemplate = 'mail/' . $template . '.tpl';
+        $mailTemplate = 'mail/' . $template . '.tpl';
         foreach ($values as $k => $v) {
             $this->smarty->assignVar($k, $v);
         }
-        $content = $this->smarty->fetchTemplate($MailTemplate);
+        $content = $this->smarty->fetchTemplate($mailTemplate);
         return $this->sendMail($to, $this->adminMail, $subject, $content, true);
     }
 }

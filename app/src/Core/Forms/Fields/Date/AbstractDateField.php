@@ -20,11 +20,7 @@ abstract class AbstractDateField extends AbstractField
         $this->allowBlank = $allowBlank;
     }
 
-    /**
-     * Return HTML Code for field
-     * @return string
-     */
-    public function display(): string
+    private function displayLabel(): string
     {
         $displayError = $this->error ? 'error_field' : '';
         $label = '<label for="' . $this->id . '"';
@@ -35,7 +31,16 @@ abstract class AbstractDateField extends AbstractField
         }
 
         $label .= '>' . $this->label['value'];
+        return $label;
+    }
 
+    /**
+     * Return HTML Code for field
+     * @return string
+     */
+    public function display(): string
+    {
+        $label = $this->displayLabel();
         $input = '<input type="' . $this->type . '" name="' . $this->name . '"';
         if ($this->id !== '') {
             $input .= ' id="' . $this->id . '"';
