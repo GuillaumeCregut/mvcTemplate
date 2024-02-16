@@ -4,4 +4,13 @@ grumphp:
             standard: .phpcs.xml.dist
         phpstan: 
             configuration: ./phpstan.neon.dist
-        
+        phpmd:
+            whitelist_patterns:
+                - /^src\/App\/(.php)/
+                - /^src\/Core\/(.php)/
+            exclude: 
+                - /^src\/templates\/(.*)/
+                - /^src\/templates_c\/(.*)/
+                - /^src\/Core\/Templates\/smarty\/(.*)/
+            ruleset:
+                -'phpmd.xml'
