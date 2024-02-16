@@ -4,16 +4,19 @@ namespace Editiel98\Kernel\Routing;
 
 class RoutesDisplay
 {
-
+    /**
+     * @var array<mixed>
+     */
     private array $routes = [];
 
     public function __construct()
     {
-       $this->routes= RegisterController::getRoutes();
+        $this->routes = RegisterController::getRoutes();
     }
 
+
     /**
-     * Get the value of routes
+     * @return array<mixed>
      */
     public function getRoutes(): array
     {
@@ -22,14 +25,15 @@ class RoutesDisplay
 
     /**
      * @param string $route
-     * 
+     *
      * @return string
      */
-    public function getRoute(string $route):string |null
+    public function getRoute(string $route): string |null
     {
-        if(key_exists($route,$this->routes)){
+        if (key_exists($route, $this->routes)) {
             return $this->routes[$route];
-        } else return null;
+        } else {
+            return null;
+        }
     }
-    
 }

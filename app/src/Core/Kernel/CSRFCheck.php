@@ -50,8 +50,7 @@ class CSRFCheck
         try {
             $secret = $this->getSecret();
         } catch (Exception $e) {
-            var_dump($e);
-            return '';
+            return false;
         }
         $varPart = $this->session->getKey('token_part');
         //Decode Token
@@ -67,7 +66,7 @@ class CSRFCheck
     private function getSecret(): string
     {
         try {
-            $config =GetEnv::getEnvValue('token');
+            $config = GetEnv::getEnvValue('token');
             return $config;
         } catch (Exception $e) {
             throw new Exception('Config not readable');

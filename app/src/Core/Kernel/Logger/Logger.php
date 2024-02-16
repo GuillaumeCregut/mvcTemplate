@@ -21,7 +21,7 @@ abstract class Logger implements LoggerInterface
     /**
      * Log a message in the log file
      * @param string $value : message
-     * 
+     *
      * @return bool
      */
     public function storeToFile(string $value): bool
@@ -31,7 +31,8 @@ abstract class Logger implements LoggerInterface
         $dateMessage = date_format($now, 'd/m/Y H:i:s');
         $message = $dateMessage . ' : ' . $value . "\n";
         try {
-            if (($file = fopen($this->filename, 'a')) && (is_writable($this->filename))) {
+            $file = fopen($this->filename, 'a');
+            if ($file && (is_writable($this->filename))) {
                 fwrite($file, $message);
                 fclose($file);
                 return true;
@@ -45,12 +46,13 @@ abstract class Logger implements LoggerInterface
 
     /**
      * Load logs from files and return them
-     * @return array
+     * @return array<mixed>|bool
      */
     public function loadFromFile(): array|bool
     {
         $logs = [];
-        if ($file = fopen($this->filename, 'r')) {
+        $file = fopen($this->filename, 'r');
+        if ($file) {
             while (!feof($file)) {
                 $line = fgets($file);
                 if ($line) {

@@ -7,20 +7,27 @@ use Editiel98\Forms\TraitTypeOf;
 abstract class AbstractField
 {
     use TraitTypeOf;
+
     protected bool $required;
     protected string $name = '';
     protected string $class = '';
     protected string $id = '';
+    /**
+     * @var array<mixed>
+     */
     protected array $dataset = [];
+    /**
+     * @var array<mixed>
+     */
     protected array $label = ['class' => '', 'value' => ''];
     protected string $placeholder = '';
-    protected bool $error=false;
+    protected bool $error = false;
 
     public function __construct(string $name, string $id, bool $required)
     {
         $this->name = $name;
         $this->id = $id;
-        $this->required=$required;
+        $this->required = $required;
     }
 
     abstract public function getTypeOf(): string;
@@ -79,18 +86,22 @@ abstract class AbstractField
         return $this;
     }
 
+
     /**
-     * Get the value of dataset
+     * @return array<mixed>
      */
     public function getDataset(): array
     {
         return $this->dataset;
     }
 
+
     /**
-     * Set the value of dataset
+     * @param array<mixed> $dataset
+     *
+     * @return self
      */
-    public function AddDataset(array $dataset): self
+    public function addDataset(array $dataset): self
     {
         $this->dataset[] = $dataset;
 
@@ -99,16 +110,20 @@ abstract class AbstractField
 
     abstract protected function display(): string;
 
+
     /**
-     * Get the value of label
+     * @return array<mixed>
      */
     public function getLabel(): array
     {
         return $this->label;
     }
 
+
     /**
-     * Set the value of label
+     * @param array<mixed> $label
+     *
+     * @return self
      */
     public function setLabel(array $label): self
     {

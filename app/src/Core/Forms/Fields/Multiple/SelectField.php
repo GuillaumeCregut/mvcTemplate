@@ -7,6 +7,9 @@ use Editiel98\Forms\Fields\AbstractField;
 class SelectField extends AbstractField
 {
     private string $typeOf = self::TYPE_STRING;
+    /**
+     * @var array<mixed>
+     */
     private array $options = [];
     private string $value = "";
 
@@ -57,7 +60,7 @@ class SelectField extends AbstractField
     }
 
     /**
-     * @param array $options
+     * @param array<mixed> $options
      * ["value"=>"display",]
      * @return self
      */
@@ -70,7 +73,7 @@ class SelectField extends AbstractField
     /**
      * @param string $display
      * @param string $value
-     * 
+     *
      * @return self
      */
     public function addOption(string $display, string $value): self
@@ -81,7 +84,7 @@ class SelectField extends AbstractField
 
     /**
      * @param string $id
-     * 
+     *
      * @return self
      */
     public function removeOption(string $id): self

@@ -1,15 +1,16 @@
 <?php
+
 namespace Editiel98\Forms;
 
 trait TraitTypeOf
 {
-    const TYPE_STRING='string';
-    const TYPE_NUMBER= 'number';
-    const TYPE_DATE='date';
-    const TYPE_DATETIME="datetime";
-    const TYPE_FILE="file";
-    const TYPE_URL="url";
-    const TYPE_BOOL='boolean';
-    const TYPE_TIME='time';
-    const TYPE_FLOAT='float';
+    protected const TYPE_STRING = 'string';
+    protected const TYPE_NUMBER = 'number';
+    protected const TYPE_DATE = 'date';
+    protected const TYPE_DATETIME = "datetime";
+    protected const TYPE_FILE = "file";
+    protected const TYPE_URL = "url";
+    protected const TYPE_BOOL = 'boolean';
+    protected const TYPE_TIME = 'time';
+    protected const TYPE_FLOAT = 'float';
 }

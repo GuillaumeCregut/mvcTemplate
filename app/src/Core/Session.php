@@ -6,16 +6,17 @@ use Editiel98\Interfaces\SessionInterface;
 
 class Session implements SessionInterface
 {
-    const SESSION_CONNECTED = 'isConnected';
-    const SESSION_FULLNAME = 'fullName';
-    const SESSION_RANK_USER = 'rankUser';
-    const SESSION_USER_ID = 'userId';
+    public const SESSION_CONNECTED = 'isConnected';
+    public const SESSION_FULLNAME = 'fullName';
+    public const SESSION_RANK_USER = 'rankUser';
+    public const SESSION_USER_ID = 'userId';
 
 
     public function __construct()
     {
-        if (session_status() === PHP_SESSION_NONE)
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
+        }
     }
 
     /**
@@ -40,7 +41,7 @@ class Session implements SessionInterface
      * @param mixed $value : value to store
      * @return void
      */
-    public function setKey(string $key, mixed $value)
+    public function setKey(string $key, mixed $value): void
     {
         $_SESSION[$key] = $value;
     }
@@ -52,7 +53,7 @@ class Session implements SessionInterface
      * @param mixed $value : values to store for the key
      * @return void
      */
-    public function setMultipleKey(string $key, mixed $value)
+    public function setMultipleKey(string $key, mixed $value): void
     {
         $_SESSION[$key][] = $value;
     }
@@ -63,7 +64,7 @@ class Session implements SessionInterface
      * @param string $key : key to remove
      * @return void
      */
-    public function deleteKey(string $key)
+    public function deleteKey(string $key): void
     {
         unset($_SESSION[$key]);
     }

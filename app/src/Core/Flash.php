@@ -5,11 +5,11 @@ namespace Editiel98;
 class Flash
 {
     private Session $session;
-    const KEY = 'editielFlash';
-    const FLASH_ERROR = 'error';
-    const FLASH_INFO = 'info';
-    const FLASH_WARNING = 'warning';
-    const FLASH_SUCCESS = 'success';
+    public const KEY = 'editielFlash';
+    public const FLASH_ERROR = 'error';
+    public const FLASH_INFO = 'info';
+    public const FLASH_WARNING = 'warning';
+    public const FLASH_SUCCESS = 'success';
 
     public function __construct()
     {

@@ -7,3 +7,4 @@ app/src/logs/*
 test*.*
 notes.txt
 app/vendor/
+.phpcs-cache
