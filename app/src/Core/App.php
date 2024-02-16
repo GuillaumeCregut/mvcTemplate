@@ -15,17 +15,17 @@ use Whoops\Run;
 class App
 {
     private Emitter $emitter;
-
+    public static float $timeStart;
     /**
      * @return void
      */
     public function run(): void
     {
         if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
-            var_dump('démarrage de whoops');
             $whoops = new Run();
             $whoops->prependHandler(new PrettyPageHandler());
             $whoops->register();
+            self::$timeStart = microtime(true);
         }
 
         $this->setEmitter();
@@ -40,7 +40,7 @@ class App
             $controller = new  $controllerName();
             $method = $controllerInfos['method'];
             $controller->$method(...$controllerInfos['params']);
-        } catch (Exception $e) {
+        } catch (Error $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
             } else {
@@ -48,7 +48,7 @@ class App
                 echo '500 - Internal Server Error';
                 exit();
             }
-        } catch (Error $e) {
+        } catch (Exception $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
             } else {

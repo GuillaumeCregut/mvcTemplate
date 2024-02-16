@@ -20,5 +20,8 @@
     {block name=body}
       Hello ! 
     {/block}
+    {if isset ($debug)}
+      {include file="partials/_debug.tpl"}
+    {/if}
 </body>
 </html>
