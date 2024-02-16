@@ -40,7 +40,7 @@ class App
             $controller = new  $controllerName();
             $method = $controllerInfos['method'];
             $controller->$method(...$controllerInfos['params']);
-        } catch (Exception $e) {
+        } catch (Error $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
             } else {
@@ -48,7 +48,7 @@ class App
                 echo '500 - Internal Server Error';
                 exit();
             }
-        } catch (Error $e) {
+        } catch (Exception $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
             } else {
