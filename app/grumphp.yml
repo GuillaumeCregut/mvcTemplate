@@ -13,4 +13,4 @@ grumphp:
                 - /^src\/templates_c\/(.*)/
                 - /^src\/Core\/Templates\/smarty\/(.*)/
             ruleset:
-                -'phpmd.xml'
+                - 'phpmd.xml'
