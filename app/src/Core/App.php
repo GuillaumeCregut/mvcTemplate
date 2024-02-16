@@ -15,17 +15,17 @@ use Whoops\Run;
 class App
 {
     private Emitter $emitter;
-
+    public static float $timeStart;
     /**
      * @return void
      */
     public function run(): void
     {
         if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
-            var_dump('démarrage de whoops');
             $whoops = new Run();
             $whoops->prependHandler(new PrettyPageHandler());
             $whoops->register();
+            self::$timeStart = microtime(true);
         }
 
         $this->setEmitter();
