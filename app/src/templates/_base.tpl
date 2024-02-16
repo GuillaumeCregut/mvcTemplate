@@ -14,6 +14,9 @@
     {/block}
 </head>
 <body>
+  {if isset ($debug)}
+   {include file="partials/_debughead.tpl"}
+  {/if}
     {if isset($flash)}
       {include file="partials/_flash.tpl"}
     {/if}
@@ -21,7 +24,7 @@
       Hello ! 
     {/block}
     {if isset ($debug)}
-      {include file="partials/_debug.tpl"}
+      {include file="partials/_debugfoot.tpl"}
     {/if}
 </body>
 </html>
