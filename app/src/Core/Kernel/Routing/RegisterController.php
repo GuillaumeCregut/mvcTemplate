@@ -85,6 +85,9 @@ class RegisterController
     public static function getRoutes(): array
     {
         $routes = [];
+        if (empty(self::$displayRoutes)) {
+            self::getControllers();
+        }
         foreach (self::$displayRoutes as $route) {
             $slugs = self::checkUrlVars($route['path']);
             $name = $route['name'];
