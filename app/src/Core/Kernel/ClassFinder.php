@@ -6,7 +6,8 @@ use Exception;
 
 class ClassFinder
 {
-    private const APP_ROOT = __DIR__ . '/../../../';
+    private const APP_ROOT = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..'
+    . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR;
 
 
     /**
@@ -28,9 +29,11 @@ class ClassFinder
             return $namespace . '\\' . str_replace('.php', '', $file);
         }, $files);
 
-        return array_filter($classes, function ($possibleClass) {
+        $findClasses = array_filter($classes, function ($possibleClass) {
             return class_exists($possibleClass);
         });
+
+        return $findClasses;
     }
 
     /**
@@ -60,12 +63,13 @@ class ClassFinder
         $namespaceFragments = explode('\\', $namespace);
         $undefinedNamespaceFragments = [];
         while ($namespaceFragments) {
-            $possibleNamespace = implode('\\', $namespaceFragments) . '\\';
+            $possibleNamespace = implode(DIRECTORY_SEPARATOR, $namespaceFragments) . DIRECTORY_SEPARATOR;
             if (array_key_exists($possibleNamespace, $composerNamespaces)) {
-                return realpath(
-                    self::APP_ROOT . $composerNamespaces[$possibleNamespace] . '/'
-                        . implode('/', $undefinedNamespaceFragments)
-                );
+                $titi = $composerNamespaces[$possibleNamespace];
+                $pathReal = str_ireplace('/', DIRECTORY_SEPARATOR, $titi);
+                $realPath =  self::APP_ROOT .  $pathReal . DIRECTORY_SEPARATOR .
+                implode(DIRECTORY_SEPARATOR, $undefinedNamespaceFragments);
+                return realpath($realPath);
             }
 
             array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));
