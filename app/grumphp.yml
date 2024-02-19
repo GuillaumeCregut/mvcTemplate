@@ -14,3 +14,4 @@ grumphp:
                 - /^src\/Core\/Templates\/smarty\/(.*)/
             ruleset:
                 - 'phpmd.xml'
+        phpunit:
