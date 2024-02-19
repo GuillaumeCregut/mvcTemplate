@@ -13,6 +13,16 @@
         }
     ],
     "require-dev": {
-        "filp/whoops": "^2.15"
+        "filp/whoops": "^2.15",
+        "phpstan/phpstan": "^1.10",
+        "squizlabs/php_codesniffer": "*",
+        "phpmd/phpmd": "^2.15",
+        "phpro/grumphp": "^2.5",
+        "phpunit/phpunit": "^11"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp": true
+        }
     }
 }

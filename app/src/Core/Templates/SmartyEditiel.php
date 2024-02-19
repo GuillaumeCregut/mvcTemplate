@@ -12,27 +12,35 @@ use ReflectionClass;
 
 require_once(dirname((__FILE__)) . '/smarty/Smarty.class.php');
 
-class SmartyEditiel extends \Smarty
+class SmartyEditiel extends AbstractSmarty
 {
-   public function __construct()
-   {
-      parent::__construct();
-      $baseDir = __DIR__ . '/../../';
-      $this->template_dir = $baseDir . 'templates/';
-      $this->compile_dir = $baseDir . 'templates_c/';
-      $this->getPlugin();
-   }
+    public function __construct()
+    {
+        $baseDir = __DIR__ . '/../../';
+        $templateDir = $baseDir . 'templates/';
+        $compileDir = $baseDir . 'templates_c/';
+        parent::__construct($templateDir, $compileDir);
+        $this->getPlugin();
+    }
 
-   private function getPlugin()
-   {
-      $plugins = ClassFinder::getClassesInNamespace('Editiel98\\Templates');
-      foreach ($plugins as $plugin) {
-         if (get_parent_class($plugin) === 'Editiel98\Templates\AbstractPlugin') {
-            $class = new ReflectionClass($plugin);
-            $r = $class->newInstance();
-            $name = $r->getName();
-            $this->registerPlugin('function', $name, [$r, 'display']);
-         }
-      }
-   }
+    public function fetchTemplate(string $filename): string
+    {
+        return parent::fetch($filename);
+    }
+
+    /**
+     * @return void
+     */
+    private function getPlugin(): void
+    {
+        $plugins = ClassFinder::getClassesInNamespace('Editiel98\\Templates');
+        foreach ($plugins as $plugin) {
+            if (get_parent_class($plugin) === 'Editiel98\Templates\AbstractPlugin') {
+                $class = new ReflectionClass($plugin);
+                $r = $class->newInstance();
+                $name = $r->getName();
+                $this->registerPlugin('function', $name, [$r, 'display']);
+            }
+        }
+    }
 }

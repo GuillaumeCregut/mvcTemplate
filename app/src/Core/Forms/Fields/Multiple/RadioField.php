@@ -10,8 +10,14 @@ class RadioField extends AbstractField
     private string $typeOf = self::TYPE_STRING;
     private bool $checked = false;
 
-    public function __construct(string $name, string $id, string $value, string $typeOf, ?bool $required=true, ?bool $checked = false)
-    {
+    public function __construct(
+        string $name,
+        string $id,
+        string $value,
+        string $typeOf,
+        ?bool $required = true,
+        ?bool $checked = false
+    ) {
         parent::__construct($name, $id, $required);
         $this->checked = $checked;
         $this->value = $value;
@@ -24,16 +30,16 @@ class RadioField extends AbstractField
      */
     public function display(): string
     {
-        $displayError=$this->error ? 'error_field' : '';
+        $displayError = $this->error ? 'error_field' : '';
         $label = '<label for="' . $this->id . '"';
         if (strlen($this->label['class']) !== 0) {
-            $label .= ' class="' . $this->label['class'] .' ' .$displayError .'"';
-        }elseif($this->error) {
-            $label .='class="'.$displayError.'"';
+            $label .= ' class="' . $this->label['class'] . ' ' . $displayError . '"';
+        } elseif ($this->error) {
+            $label .= 'class="' . $displayError . '"';
         }
         $label .= '>' . $this->label['value'];
-        if($this->error){
-            $label.=' Erreur ';
+        if ($this->error) {
+            $label .= ' Erreur ';
         }
         $input = '<input type="radio" name="' . $this->name . '"';
         if ($this->id !== '') {

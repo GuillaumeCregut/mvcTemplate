@@ -10,6 +10,6 @@ class HomeController extends AbstractController
     #[RouteAttribute('/', name: 'home')]
     public function index(): void
     {
-        $this->smarty->display('_base.tpl');
+        $this->render('_base.tpl');
     }
 }

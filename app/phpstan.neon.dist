@@ -1,0 +1,13 @@
+includes:
+	- phpstan-baseline.neon
+parameters:
+    level: 7
+    paths:
+        - src
+        - public
+    excludePaths:
+        - src/Core/Templates/*
+        - src/templates/*
+        - src/templates_c/*
+        - src/App/*
+    treatPhpDocTypesAsCertain: false

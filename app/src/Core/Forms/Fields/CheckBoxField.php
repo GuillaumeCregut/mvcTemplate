@@ -10,8 +10,13 @@ class CheckBoxField extends AbstractField
     private string $typeOf = self::TYPE_BOOL;
     private bool $checked;
 
-    public function __construct(string $name, string $id, string $typeOf, ?bool $required = true, ?bool $checked = false)
-    {
+    public function __construct(
+        string $name,
+        string $id,
+        string $typeOf,
+        ?bool $required = true,
+        ?bool $checked = false
+    ) {
         parent::__construct($name, $id, $required);
         $this->typeOf = $typeOf;
         $this->checked = $checked;

@@ -4,6 +4,11 @@ mysql/
 templates_c/
 app/src/logs/*
 !app/src/logs/.gitkeep
-test*.*
+
 notes.txt
 app/vendor/
+.phpcs-cache
+app/src/App/*/Test*.*
+app/src/templates/test*.*
+app/tests/TotoTest.*
+app/.phpunit.result.cache

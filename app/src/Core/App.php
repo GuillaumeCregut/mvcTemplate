@@ -15,19 +15,21 @@ use Whoops\Run;
 class App
 {
     private Emitter $emitter;
-
-    public function run()
+    public static float $timeStart;
+    /**
+     * @return void
+     */
+    public function run(): void
     {
         if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
-            var_dump('démarrage de whoops');
             $whoops = new Run();
             $whoops->prependHandler(new PrettyPageHandler());
             $whoops->register();
+            self::$timeStart = microtime(true);
         }
 
         $this->setEmitter();
-        $url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '');
-        $controllerInfos = Routing::decodeURI($url);
+        $controllerInfos = Routing::decodeURI($_SERVER['REQUEST_URI']);
         if (empty($controllerInfos)) {
             header("HTTP/1.0 404 Not Found");
             echo '404 - Not Found';
@@ -38,7 +40,7 @@ class App
             $controller = new  $controllerName();
             $method = $controllerInfos['method'];
             $controller->$method(...$controllerInfos['params']);
-        } catch (Exception $e) {
+        } catch (Error $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
             } else {
@@ -46,7 +48,7 @@ class App
                 echo '500 - Internal Server Error';
                 exit();
             }
-        } catch (Error $e) {
+        } catch (Exception $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
             } else {
@@ -59,23 +61,30 @@ class App
 
     /**
      * Loads emitters
+     *
      * @return void
      */
     private function setEmitter(): void
     {
         $this->emitter = Emitter::getInstance();
-        $this->emitter->on(Emitter::DATABASE_ERROR, function ($message) {
-            $logger = new ErrorLogger();
-            if ($logger->storeToFile($message)) {
-                $logger = null;
+        $this->emitter->on(
+            Emitter::DATABASE_ERROR,
+            function ($message) {
+                $logger = new ErrorLogger();
+                if ($logger->storeToFile($message)) {
+                    $logger = null;
+                }
             }
-        });
-        $this->emitter->on(Emitter::MAIL_ERROR, function ($to) {
-            $logger = new WarnLogger();
-            $message = "L'envoi du mail à " . $to . ' a échoué';
-            if ($logger->storeToFile($message)) {
-                $logger = null;
+        );
+        $this->emitter->on(
+            Emitter::MAIL_ERROR,
+            function ($to) {
+                $logger = new WarnLogger();
+                $message = "L'envoi du mail à " . $to . ' a échoué';
+                if ($logger->storeToFile($message)) {
+                    $logger = null;
+                }
             }
-        });
+        );
     }
 }

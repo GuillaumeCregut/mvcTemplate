@@ -26,8 +26,7 @@ class CSRFCheck
         try {
             $secret = $this->getSecret();
         } catch (Exception $e) {
-            var_dump($e);
-            return '';
+            throw new Exception('Env not found');
         }
         //generate token
         $varPart = bin2hex(random_bytes(24));
@@ -46,14 +45,19 @@ class CSRFCheck
      */
     public function checkToken(string $token): bool
     {
+        if ($token === '') {
+            return false;
+        }
         //Get Secret
         try {
             $secret = $this->getSecret();
         } catch (Exception $e) {
-            var_dump($e);
-            return '';
+            return false;
         }
         $varPart = $this->session->getKey('token_part');
+        if (!$varPart) {
+            return false;
+        }
         //Decode Token
         return hash_equals($this->hashToken($varPart, $secret), $token);
     }
@@ -67,7 +71,7 @@ class CSRFCheck
     private function getSecret(): string
     {
         try {
-            $config =GetEnv::getEnvValue('token');
+            $config = GetEnv::getEnvValue('token');
             return $config;
         } catch (Exception $e) {
             throw new Exception('Config not readable');

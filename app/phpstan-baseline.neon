@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method Editiel98\\\\Kernel\\\\Entity\\\\AbstractEntity\\:\\:__set\\(\\) with return type void returns mixed but should not return anything\\.$#"
+			count: 1
+			path: src/Core/Kernel/Entity/AbstractEntity.php

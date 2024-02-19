@@ -20,6 +20,7 @@ And it is still in developpement
 - And more to come.
 - Works in docker for more flexibility
 - Use .env file and env datas, so you can directly pass your env datas with Docker
+- Clean Code with PHPStan, PHPCS and PHPMD
 
 So, for the moment, no instruction on how to use it.
 

@@ -4,6 +4,7 @@ namespace Editiel98;
 
 use Editiel98\Kernel\Database;
 use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
 use Editiel98\Templates\SmartyEditiel;
 use Exception;
@@ -31,14 +32,17 @@ abstract class AbstractController
         $this->hasFlash = $this->flash->hasFlash();
         if ($this->hasFlash) {
             $flashes = $this->flash->getFlash();
-            $this->smarty->assign('flash', $flashes);
+            $this->smarty->assignVar('flash', $flashes);
         }
         $this->emitter = Emitter::getInstance();
         $this->dbConnection = Database::getInstance();
         $this->getCredentials();
     }
 
-    protected function getCredentials()
+    /**
+     * @return void
+     */
+    protected function getCredentials(): void
     {
         $connected = $this->session->getKey(Session::SESSION_CONNECTED);
         if (!is_null($connected)) {
@@ -53,17 +57,29 @@ abstract class AbstractController
         }
     }
 
-    protected function render(string $filename, array $values)
+    /**
+     * @param string $filename
+     * @param array<mixed> $values
+     *
+     * @return void
+     */
+    protected function render(string $filename, ?array $values = []): void
     {
-        foreach ($values as $key => $value) {
-            $this->smarty->assign($key, $value);
+        if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
+            $timeSpent = round(1000 * (microtime(true) - App::$timeStart));
+            $this->smarty->assignVar('debug', '');
+            $this->smarty->assignVar('time', $timeSpent);
         }
-        $this->smarty->display($filename);
+        foreach ($values as $key => $value) {
+            $this->smarty->assignVar($key, $value);
+        }
+        $this->smarty->displayTemplate($filename);
+        die();
     }
 
     /**
      * @param string $routeName
-     * 
+     *
      * @return void
      */
     protected function redirectTo(string $routeName): void
