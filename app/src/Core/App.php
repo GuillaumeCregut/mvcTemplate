@@ -7,6 +7,7 @@ use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Logger\ErrorLogger;
 use Editiel98\Kernel\Logger\WarnLogger;
 use Editiel98\Kernel\Routing\Routing;
+use Editiel98\Kernel\WebInterface\RequestHandler;
 use Error;
 use Exception;
 use Whoops\Handler\PrettyPageHandler;
@@ -21,15 +22,19 @@ class App
      */
     public function run(): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
             $whoops = new Run();
             $whoops->prependHandler(new PrettyPageHandler());
             $whoops->register();
             self::$timeStart = microtime(true);
         }
-
+        $requestHandler = RequestHandler::getInstance();
+        $requestHandler->init($_GET, $_POST, $_SERVER, $_COOKIE, $_SESSION);
         $this->setEmitter();
-        $controllerInfos = Routing::decodeURI($_SERVER['REQUEST_URI']);
+        $controllerInfos = Routing::decodeURI($requestHandler->getURI());
         if (empty($controllerInfos)) {
             header("HTTP/1.0 404 Not Found");
             echo '404 - Not Found';

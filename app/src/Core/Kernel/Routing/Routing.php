@@ -2,6 +2,8 @@
 
 namespace Editiel98\Kernel\Routing;
 
+use Editiel98\Kernel\WebInterface\RequestHandler;
+
 class Routing
 {
     private const CONTROLLER = 0;
@@ -49,6 +51,8 @@ class Routing
      */
     public static function decodeURI($urlToFind): array
     {
+        $requestHandler = RequestHandler::getInstance();
+        $queries = $requestHandler->query;
         $rawUrl = parse_url($urlToFind, PHP_URL_PATH);
         if (!$rawUrl) {
             $rawUrl = '';
@@ -71,8 +75,8 @@ class Routing
         }
 
         foreach ($route[self::PARAMS] ?? [] as $parameter) {
-            if (isset($_GET[$parameter])) {
-                $parameters[$parameter] =  $_GET[$parameter];
+            if ($queries->hasKey($parameter)) {
+                $parameters[$parameter] =  $queries->getParam($parameter);
                 if (isset($key)) {
                     unset($route[self::PARAMS][$key]);
                 }
