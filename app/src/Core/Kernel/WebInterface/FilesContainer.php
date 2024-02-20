@@ -1,5 +1,10 @@
 <?php
 
+/*
+Based on File class from Symfony (c) F. Potencier
+
+*/
+
 namespace Editiel98\Kernel\WebInterface;
 
 use Editiel98\Kernel\UploadedFile;

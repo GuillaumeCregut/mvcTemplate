@@ -1,5 +1,9 @@
 <?php
 
+/*
+Based on File class from Symfony (c) F. Potencier
+*/
+
 namespace Editiel98\Kernel;
 
 use Error;
@@ -53,7 +57,7 @@ class File extends \SplFileInfo
             }
         }
         $target = rtrim($directory, '/\\') . DIRECTORY_SEPARATOR .
-         (null === $name ? $this->getBasename() : $this->getName($name));
+            (null === $name ? $this->getBasename() : $this->getName($name));
         return new self($target, false);
     }
 }
