@@ -7,6 +7,6 @@
 </head>
 <body>
     {block name=body}
-    {/blocks}
+    {/block}
 </body>
 </html>

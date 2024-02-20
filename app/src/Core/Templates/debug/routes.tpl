@@ -1,6 +1,6 @@
 {extends file="_base.tpl"}
 {block name=body}
-    liste des routes.
+<h1>liste des routes.</h1>
     <table>
         <thead>
             <tr>

@@ -6,20 +6,18 @@
     padding: 5px;
     background-color: red;
 ">
-    <p style="
-        padding : 5px;
-        margin-right: 5px;
-        border: 1px solid black;
-    ">Debug Mode</p>
-    <p style="
-    padding : 5px;
-    margin-right: 5px;
-    border: 1px solid black;
-">page générée en {$time} ms</p>
     <p style=" padding : 5px; margin-right: 5px; border: 1px solid black; ">Powered by Smarty {$smarty.version}</p>
-    <p style="
-    padding : 5px;
-    margin-right: 5px;
-    border: 1px solid black;
-"><a href="/debug/routes">Routes</a></p>
+{foreach from=$menus item=menu}
+<p style="
+padding : 5px;
+margin-right: 5px;
+border: 1px solid black;
+">
+{if $menu.link!=''}
+<a href="{$menu.link}">{$menu.display}</a>
+{else}
+{$menu.display}
+{/if}
+</p>
+{/foreach}
 </section>
