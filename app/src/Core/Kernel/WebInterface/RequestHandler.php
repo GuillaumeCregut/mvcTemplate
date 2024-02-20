@@ -41,7 +41,7 @@ class RequestHandler
     //For $_FILES
     public FilesContainer $files;
 
-    public ReadWriteContainer $session;
+    public SessionContainer $session;
 
     //Voir pour les headers ?!
 
@@ -71,7 +71,7 @@ class RequestHandler
         $this->query = new ReadOnlyContainer($get);
         $this->request = new ReadOnlyContainer($post);
         $this->server = new ReadOnlyContainer($server);
-        $this->session = new ReadWriteContainer($session);
+        $this->session = new SessionContainer($session);
         //Check if override
         $this->overRideMethod = $this->testOveride();
     }
