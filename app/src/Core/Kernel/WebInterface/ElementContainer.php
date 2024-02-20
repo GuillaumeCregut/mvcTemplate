@@ -26,13 +26,13 @@ abstract class ElementContainer
      */
     public function getParam(string $key): mixed
     {
-        if (!$this->asKey($key)) {
+        if (!$this->hasKey($key)) {
             throw new WebInterfaceException(sprintf("Key %s not found", $key));
         }
         return $this->params[$key];
     }
 
-    public function asKey(string $key): bool
+    public function hasKey(string $key): bool
     {
         return isset($this->params[$key]);
     }
