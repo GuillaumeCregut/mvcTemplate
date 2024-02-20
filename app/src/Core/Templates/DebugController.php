@@ -10,13 +10,6 @@ use Editiel98\Kernel\Routing\RoutesDisplay;
 #[RouteAttribute('/debug', name: 'debug_')]
 class DebugController extends MainAbstractController
 {
-    protected DebugSmarty $smarty;
-
-    public function __construct()
-    {
-        $this->smarty = new DebugSmarty();
-    }
-
     public function getDisplay(): string
     {
         $timeSpent = round(1000 * (microtime(true) - App::$timeStart));
