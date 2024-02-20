@@ -10,4 +10,5 @@ parameters:
         - src/templates/*
         - src/templates_c/*
         - src/App/*
+        - tests/*
     treatPhpDocTypesAsCertain: false

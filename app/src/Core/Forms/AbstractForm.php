@@ -3,6 +3,7 @@
 namespace Editiel98\Forms;
 
 use Editiel98\Forms\Fields\AbstractField;
+use Editiel98\Kernel\WebInterface\RequestHandler;
 use Error;
 use Exception;
 
@@ -143,6 +144,9 @@ abstract class AbstractForm extends AbstractMiniForm
      */
     private function processFile(string $name, AbstractField $field): bool
     {
+        $requestHandler = RequestHandler::getInstance();
+        $filesFromRH = $requestHandler->files;
+        $filesFromForm = $filesFromRH->getAll();
         try {
             $nameField = $name;
             $multiple = false;
@@ -151,14 +155,14 @@ abstract class AbstractForm extends AbstractMiniForm
                 $nameField = substr($name, 0, $pos);
                 $multiple = true;
             }
-            if (!array_key_exists($nameField, $_FILES) && $field->isRequired()) {
+            if (!array_key_exists($nameField, $filesFromForm) && $field->isRequired()) {
                 $this->errorFields[] = $name;
                 return false;
             }
             if ($multiple) {
-                $files = $this->orderFiles($_FILES[$nameField]);
+                $files = $this->orderFiles($filesFromForm[$nameField]);
             } else {
-                $files[] = $_FILES[$nameField];
+                $files[] = $filesFromForm[$nameField];
             }
             return $this->parseFiles($files, $field, $name, $nameField);
         } catch (Exception $e) {

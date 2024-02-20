@@ -3,6 +3,7 @@
 namespace Editiel98;
 
 use Editiel98\Interfaces\SessionInterface;
+use Editiel98\Kernel\WebInterface\RequestHandler;
 
 class Session implements SessionInterface
 {
@@ -10,13 +11,14 @@ class Session implements SessionInterface
     public const SESSION_FULLNAME = 'fullName';
     public const SESSION_RANK_USER = 'rankUser';
     public const SESSION_USER_ID = 'userId';
-
+    private RequestHandler $handler;
 
     public function __construct()
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+        $this->handler = RequestHandler::getInstance();
     }
 
     /**
@@ -27,8 +29,8 @@ class Session implements SessionInterface
      */
     public function getKey(string $key): mixed
     {
-        if (isset($_SESSION[$key])) {
-            return $_SESSION[$key];
+        if ($this->handler->session->hasKey($key)) {
+            return $this->handler->session->getParam($key);
         } else {
             return null;
         }
@@ -43,7 +45,7 @@ class Session implements SessionInterface
      */
     public function setKey(string $key, mixed $value): void
     {
-        $_SESSION[$key] = $value;
+        $this->handler->session->setValue($key, $value);
     }
 
     /**
@@ -55,7 +57,7 @@ class Session implements SessionInterface
      */
     public function setMultipleKey(string $key, mixed $value): void
     {
-        $_SESSION[$key][] = $value;
+        $this->handler->session->addValueToArray($key, $value);
     }
 
     /**
@@ -66,7 +68,7 @@ class Session implements SessionInterface
      */
     public function deleteKey(string $key): void
     {
-        unset($_SESSION[$key]);
+        $this->handler->session->remove($key);
     }
 
     /**
@@ -76,6 +78,7 @@ class Session implements SessionInterface
      */
     public function destroy()
     {
+        $this->handler->session->clear();
         session_destroy();
     }
 }

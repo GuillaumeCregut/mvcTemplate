@@ -12,3 +12,4 @@ app/src/App/*/Test*.*
 app/src/templates/test*.*
 app/tests/TotoTest.*
 app/.phpunit.result.cache
+app/phpstan.bat
