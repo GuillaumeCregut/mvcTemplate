@@ -7,7 +7,7 @@ class RegisterControllerTest extends TestCase
 {
     public function testGetController(): void
     {
-        $controller=RegisterController::getControllers();
+        $controller=RegisterController::getControllersRoutes();
         $this->assertIsArray($controller);
     }
 

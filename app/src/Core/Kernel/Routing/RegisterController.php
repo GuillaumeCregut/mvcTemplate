@@ -12,6 +12,10 @@ class RegisterController
      * @var array<mixed>
      */
     private static array $displayRoutes;
+    /**
+     * @var array<mixed>
+     */
+    public static array $rawRoutes;
 
     /**
      * @param mixed $controller
@@ -51,7 +55,8 @@ class RegisterController
                 'path' => $route->getPath(),
                 'method' => $key,
                 'datas' => $route->getDatas(),
-                'name' => $routeName
+                'name' => $routeName,
+                'params' => []
             );
             self::$displayRoutes[] = array('prefix' => $prefix, 'path' => $route->getPath(), 'name' => $routeName);
         }
@@ -62,7 +67,7 @@ class RegisterController
     /**
      * @return array<mixed> named array with controller name, methods and params
      */
-    public static function getControllers(): array
+    public static function getControllersRoutes(): array
     {
         $routes = [];
         $controllers = ClassFinder::getClassesInNamespace('App\\Controller');
@@ -82,7 +87,7 @@ class RegisterController
                 self::storePaths($routes, $controllerRoutes);
             }
         }
-        return $routes;
+        return self::$rawRoutes;
     }
 
 
@@ -93,15 +98,11 @@ class RegisterController
     {
         $routes = [];
         if (empty(self::$displayRoutes)) {
-            self::getControllers();
+            self::getControllersRoutes();
         }
         foreach (self::$displayRoutes as $route) {
-            $slugs = self::checkUrlVars($route['path']);
             $name = $route['name'];
             $path = $route['path'];
-            if ($slugs) {
-                $path = $slugs['path'];
-            }
             $prefix = $route['prefix'];
             $routes[$name] = $prefix . $path;
         }
@@ -119,20 +120,14 @@ class RegisterController
         foreach ($controller as $key => $controllerRoutes) {
             $controllerName = $key;
             foreach ($controllerRoutes as $route) {
-                $slugPresent = self::checkUrlVars($route['path']);
-                $path = $route['path'];
-                if ($slugPresent) {
-                    $path = $slugPresent['path'];
-                    $slug = $slugPresent['slug'];
-                } else {
-                    $slug = '';
-                }
-                $path = $route['prefix'] . $path;
+                $route['controller'] = $controllerName;
+                self::$rawRoutes[] = $route;
+                $path = $route['prefix'] . $route['path'];
                 $method = $route['method'];
                 if (empty($route['datas'])) {
-                    $routes[$path] = array($controllerName, $method, $slug);
+                    $routes[$path] = array($controllerName, $method);
                 } else {
-                    $routes[$path] = array($controllerName, $method, $slug, $route['datas']);
+                    $routes[$path] = array($controllerName, $method, $route['datas']);
                 }
             }
         }
@@ -143,18 +138,18 @@ class RegisterController
      *
      * @return array<mixed>
      */
-    public static function checkUrlVars(string $url): array|false
-    {
-        $slug = '';
-        $start = $start = strpos($url, '{');
-        if ($start) {
-            if (strpos($url, '}')) {
-                $slug = substr($url, $start + 1, -1);
-                $length = strlen($url) - $start;
-                $path = substr($url, 0, $length - 1);
-                return array('slug' => $slug, 'path' => $path);
-            }
-        }
-        return false;
-    }
+    // public static function checkUrlVars(string $url): array|false
+    // {
+    //     $slug = '';
+    //     $start = $start = strpos($url, '{');
+    //     if ($start) {
+    //         if (strpos($url, '}')) {
+    //             $slug = substr($url, $start + 1, -1);
+    //             $length = strlen($url) - $start;
+    //             $path = substr($url, 0, $length - 1);
+    //             return array('slug' => $slug, 'path' => $path);
+    //         }
+    //     }
+    //     return false;
+    // }
 }
