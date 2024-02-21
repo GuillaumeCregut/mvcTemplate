@@ -1,5 +1,5 @@
 <section style="
-    position: fixed;
+    margin-top: 10px;
     bottom : 0;
     display: flex;
     width : 100vw;
