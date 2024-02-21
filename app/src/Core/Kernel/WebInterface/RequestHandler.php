@@ -47,6 +47,8 @@ class RequestHandler
 
     public ReadWriteContainer $cookies;
 
+    public ReadWriteContainer $infos;
+
     private static ?RequestHandler $instance = null;
 
     public static function getInstance(): RequestHandler
@@ -72,6 +74,7 @@ class RequestHandler
         $this->request = new ReadOnlyContainer($post);
         $this->server = new ReadOnlyContainer($server);
         $this->session = new SessionContainer($session);
+        $this->infos = new ReadWriteContainer([]);
         //Check if override
         $this->overRideMethod = $this->testOveride();
     }

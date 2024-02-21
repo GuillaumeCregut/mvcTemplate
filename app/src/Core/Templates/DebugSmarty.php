@@ -16,4 +16,9 @@ class DebugSmarty extends AbstractSmarty
 
         $this->displayTemplate($error);
     }
+
+    public function fetchTemplate($name): string
+    {
+        return parent::fetch($name);
+    }
 }

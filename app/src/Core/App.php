@@ -42,8 +42,10 @@ class App
         }
         try {
             $controllerName =  $controllerInfos['controller'];
+            $requestHandler->infos->setValue('Controller', $controllerName);
             $controller = new  $controllerName();
             $method = $controllerInfos['method'];
+            $requestHandler->infos->setValue('Method', $method);
             $controller->$method(...$controllerInfos['params']);
         } catch (Error $e) {
             if (isset($whoops)) {

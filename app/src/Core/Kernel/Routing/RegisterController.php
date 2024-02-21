@@ -3,6 +3,7 @@
 namespace Editiel98\Kernel\Routing;
 
 use Editiel98\Kernel\ClassFinder;
+use Editiel98\Kernel\GetEnv;
 use ReflectionClass;
 
 class RegisterController
@@ -65,8 +66,14 @@ class RegisterController
     {
         $routes = [];
         $controllers = ClassFinder::getClassesInNamespace('App\\Controller');
+        if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
+            $controllers[] = 'Editiel98\\Templates\\DebugController';
+        }
         foreach ($controllers as $controller) {
-            if (get_parent_class($controller) === 'Editiel98\AbstractController') {
+            if (
+                (get_parent_class($controller) === 'Editiel98\AbstractController') ||
+                (get_parent_class($controller) === 'Editiel98\Kernel\MainAbstractController')
+            ) {
                 $controllerRoutes = self::registerContoller($controller);
 
                 if (!$controllerRoutes) {
