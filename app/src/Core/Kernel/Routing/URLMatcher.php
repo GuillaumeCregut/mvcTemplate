@@ -17,8 +17,7 @@ class URLMatcher
     /**
      * @param string $url
      * @param mixed[] $routes
-     * 
-     * @return mixed[] 
+     * @return mixed[]
      */
     public function findRoute(string $url, array $routes): array
     {
@@ -43,7 +42,6 @@ class URLMatcher
 
     /**
      * @param string $route
-     * 
      * @return bool
      */
     private function hasSlug(string $route): bool
@@ -61,7 +59,6 @@ class URLMatcher
     /**
      * @param string $url
      * @param mixed[] $route
-     * 
      * @return mixed[]
      */
     private function matchPattern(string $url, array $route): array | false
@@ -88,7 +85,6 @@ class URLMatcher
     /**
      * @param mixed[] $route
      * @param string $url
-     * 
      * @return mixed[]
      */
     private function getSlugs(array $route, string $url): array
