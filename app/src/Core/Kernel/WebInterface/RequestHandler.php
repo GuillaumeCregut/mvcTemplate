@@ -132,4 +132,51 @@ class RequestHandler
             throw new WebInterfaceException(sprintf(" the key %s doesn't exist", $key));
         }
     }
+
+    /**
+     * @return string
+     */
+    function getContentType(): string | null
+    {
+        try {
+            return $this->getServerKey('CONTENT_TYPE');
+        } catch (WebInterfaceException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentLength(): string | null
+    {
+        try {
+            return $this->getServerKey('CONTENT_LENGTH');
+        } catch (WebInterfaceException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentOrigin(): string | null
+    {
+        try {
+            return $this->getServerKey('HTTP_ORIGIN');
+        } catch (WebInterfaceException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getServerProtocol(): string | false
+    {
+        if ($this->server->hasKey('SERVER_PROTOCOL')) {
+            return $this->server->getParam('SERVER_PROTOCOL');
+        }
+        return false;
+    }
 }
