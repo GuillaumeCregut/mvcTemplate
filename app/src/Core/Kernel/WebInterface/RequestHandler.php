@@ -136,7 +136,7 @@ class RequestHandler
     /**
      * @return string
      */
-    function getContentType(): string | null
+    public function getContentType(): string | null
     {
         try {
             return $this->getServerKey('CONTENT_TYPE');
