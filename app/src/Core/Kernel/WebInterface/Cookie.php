@@ -56,8 +56,12 @@ class Cookie
 
     public function toString(): string
     {
+        $value = $this->value;
+        if ($value === '') {
+            $value = null;
+        }
         $toReturn = $this->name . '=';
-        $toReturn .= null !== $this->value ? $this->value . ';' : 'deleted' . ';';
+        $toReturn .= null !== $value ? $value . ';' : 'deleted' . ';';
         if ($this->expire === 0) {
             $expireDate = gmdate('d M Y H:m:s', 0);
             $maxAge = 0;
@@ -78,5 +82,31 @@ class Cookie
             $toReturn .= 'httpOnly';
         }
         return $toReturn;
+    }
+
+    /**
+     * Get the value of name
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get the value of value
+     */
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set the value of value
+     */
+    public function setValue(?string $value): self
+    {
+        $this->value = $value;
+
+        return $this;
     }
 }
