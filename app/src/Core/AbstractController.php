@@ -6,6 +6,7 @@ use Editiel98\Kernel\Database;
 use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
+use Editiel98\Kernel\WebInterface\ResponseHandler;
 use Editiel98\Templates\DebugController;
 use Editiel98\Templates\SmartyEditiel;
 use Exception;
@@ -58,13 +59,13 @@ abstract class AbstractController
         }
     }
 
+
     /**
      * @param string $filename
-     * @param array<mixed> $values
-     *
-     * @return void
+     * @param mixed[] | null $values
+     * @return ResponseHandler
      */
-    protected function render(string $filename, ?array $values = []): void
+    protected function render(string $filename, ?array $values = []): ResponseHandler
     {
         if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
             $debugController = new DebugController();
@@ -73,22 +74,26 @@ abstract class AbstractController
         foreach ($values as $key => $value) {
             $this->smarty->assignVar($key, $value);
         }
-        $this->smarty->displayTemplate($filename);
-        die();
+        $template = $this->smarty->fetchTemplate($filename);
+        $rhandler = new ResponseHandler();
+        $rhandler->setContent($template);
+        return $rhandler;
     }
 
     /**
      * @param string $routeName
      *
-     * @return void
+     * @return ResponseHandler
      */
-    protected function redirectTo(string $routeName): void
+    protected function redirectTo(string $routeName): ResponseHandler
     {
         $routes = RegisterController::getRoutes();
         if (empty($routes[$routeName])) {
             throw new Exception('Route does not exists');
         }
-        header('Location: ' . $routes[$routeName]);
-        die();
+        $rhandler = new ResponseHandler();
+        $rhandler->setHeaderResponse(302, 'Found');
+        $rhandler->addHeader('Location', $routes[$routeName]);
+        return $rhandler;
     }
 }
