@@ -105,7 +105,13 @@ class ResponseHandler
         return $this->content;
     }
 
-    public function addHeader(string $name, mixed $value)
+    /**
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function addHeader(string $name, mixed $value): void
     {
         $this->headers->set($name, $value);
     }
