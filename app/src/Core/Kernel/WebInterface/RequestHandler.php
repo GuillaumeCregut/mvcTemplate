@@ -45,7 +45,7 @@ class RequestHandler
 
     //Voir pour les headers ?!
 
-    public ReadWriteContainer $cookies;
+    public ReadOnlyContainer $cookies;
 
     public ReadWriteContainer $infos;
 
@@ -69,7 +69,7 @@ class RequestHandler
      */
     public function init(array $get, array $post, array $server, array $cookies, array $session): void
     {
-        $this->cookies = new ReadWriteContainer($cookies);
+        $this->cookies = new ReadOnlyContainer($cookies);
         $this->query = new ReadOnlyContainer($get);
         $this->request = new ReadOnlyContainer($post);
         $this->server = new ReadOnlyContainer($server);
@@ -131,5 +131,52 @@ class RequestHandler
         } catch (WebInterfaceException $e) {
             throw new WebInterfaceException(sprintf(" the key %s doesn't exist", $key));
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentType(): string | null
+    {
+        try {
+            return $this->getServerKey('CONTENT_TYPE');
+        } catch (WebInterfaceException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentLength(): string | null
+    {
+        try {
+            return $this->getServerKey('CONTENT_LENGTH');
+        } catch (WebInterfaceException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentOrigin(): string | null
+    {
+        try {
+            return $this->getServerKey('HTTP_ORIGIN');
+        } catch (WebInterfaceException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getServerProtocol(): string | false
+    {
+        if ($this->server->hasKey('SERVER_PROTOCOL')) {
+            return $this->server->getParam('SERVER_PROTOCOL');
+        }
+        return false;
     }
 }

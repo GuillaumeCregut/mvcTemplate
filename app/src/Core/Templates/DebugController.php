@@ -7,6 +7,7 @@ use Editiel98\Kernel\Attribute\RouteAttribute;
 use Editiel98\Kernel\MainAbstractController;
 use Editiel98\Kernel\Routing\RoutesDisplay;
 use Editiel98\Kernel\WebInterface\RequestHandler;
+use Editiel98\Kernel\WebInterface\ResponseHandler;
 
 #[RouteAttribute('/debug', name: 'debug_')]
 class DebugController extends MainAbstractController
@@ -51,7 +52,7 @@ class DebugController extends MainAbstractController
             ),
             array(
                 'display' => $this->handler->infos->getParam('Controller') . ' - '
-                 . $this->handler->infos->getParam('Method'),
+                    . $this->handler->infos->getParam('Method'),
                 'link' => ''
             )
 
@@ -62,20 +63,24 @@ class DebugController extends MainAbstractController
     }
 
     #[RouteAttribute('/routes', name: 'routes')]
-    public function displayRoutes(): void
+    public function displayRoutes(): ResponseHandler
     {
         $displayRoutes = new RoutesDisplay();
-        $this->smarty->assign('routes', $displayRoutes->getRoutes());
-        $this->smarty->assign('debug', $this->getDisplay());
-        $this->smarty->displayTemplate('debug/routes.tpl');
+        return  $this->render('debug/routes.tpl', [
+            'routes' => $displayRoutes->getRoutes(),
+            'debug' => $this->getDisplay()
+        ]);
     }
 
     #[RouteAttribute('/session', name: 'session')]
-    public function displaySession(): void
+    public function displaySession(): ResponseHandler
     {
         $sessionVars = $this->handler->session->getAll();
         $this->smarty->assign('routes', $sessionVars);
         $this->smarty->assign('debug', $this->getDisplay());
-        $this->smarty->displayTemplate('debug/session.tpl');
+        return $this->render('debug/session.tpl', [
+            'routes' => $sessionVars,
+            "debug" => $this->getDisplay()
+        ]);
     }
 }
