@@ -6,6 +6,7 @@ use Editiel98\Kernel\Database;
 use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
+use Editiel98\Templates\DebugController;
 use Editiel98\Templates\SmartyEditiel;
 use Exception;
 
@@ -66,9 +67,8 @@ abstract class AbstractController
     protected function render(string $filename, ?array $values = []): void
     {
         if (GetEnv::getEnvValue('envMode') === 'DEBUG') {
-            $timeSpent = round(1000 * (microtime(true) - App::$timeStart));
-            $this->smarty->assignVar('debug', '');
-            $this->smarty->assignVar('time', $timeSpent);
+            $debugController = new DebugController();
+            $this->smarty->assignVar('debug', $debugController->getDisplay());
         }
         foreach ($values as $key => $value) {
             $this->smarty->assignVar($key, $value);

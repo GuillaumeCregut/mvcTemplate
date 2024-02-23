@@ -21,7 +21,7 @@
       Hello ! 
     {/block}
     {if isset ($debug)}
-      {include file="partials/_debug.tpl"}
+     {$debug}
     {/if}
 </body>
 </html>

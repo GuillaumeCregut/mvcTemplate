@@ -1,17 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <p>Debug page</p>
-    <div>
-        <iframe srcdoc="{$content}"></iframe>
-    </div>
-</body>
-
-</html>
+<section style="
+    margin-top: 10px;
+    bottom : 0;
+    display: flex;
+    width : 100vw;
+    padding: 5px;
+    background-color: red;
+">
+    <p style=" padding : 5px; margin-right: 5px; border: 1px solid black; ">Powered by Smarty {$smarty.version}</p>
+{foreach from=$menus item=menu}
+<p style="
+padding : 5px;
+margin-right: 5px;
+border: 1px solid black;
+">
+{if $menu.link!=''}
+<a href="{$menu.link}">{$menu.display}</a>
+{else}
+{$menu.display}
+{/if}
+</p>
+{/foreach}
+</section>
