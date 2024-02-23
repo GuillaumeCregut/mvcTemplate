@@ -45,7 +45,7 @@ class RequestHandler
 
     //Voir pour les headers ?!
 
-    public ReadWriteContainer $cookies;
+    public ReadOnlyContainer $cookies;
 
     public ReadWriteContainer $infos;
 
@@ -69,7 +69,7 @@ class RequestHandler
      */
     public function init(array $get, array $post, array $server, array $cookies, array $session): void
     {
-        $this->cookies = new ReadWriteContainer($cookies);
+        $this->cookies = new ReadOnlyContainer($cookies);
         $this->query = new ReadOnlyContainer($get);
         $this->request = new ReadOnlyContainer($post);
         $this->server = new ReadOnlyContainer($server);
