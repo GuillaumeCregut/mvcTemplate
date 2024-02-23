@@ -5,7 +5,7 @@ namespace Editiel98\Kernel\WebInterface;
 class Cookies
 {
     /**
-     * @var mixed[]
+     * @var Cookie[]
      */
     private array $cookies = [];
     private static ?Cookies $instance = null;
@@ -37,15 +37,30 @@ class Cookies
         return $this;
     }
 
-
     /**
-     * @param string $key
+     *
+     * @param string $name
      * @param mixed $value
+     * @param string|null $expire
+     * @param string|null $domain
+     * @param string|null $path
+     * @param boolean|null $secure
+     * @param boolean|null $httpOnly
+     * @param string|null $sameSite
      * @return self
      */
-    public function set(string $key, mixed $value): self
-    {
-        $this->cookies[$key] = $value;
+    public function set(
+        string $name,
+        mixed $value,
+        ?string $expire,
+        ?string $domain,
+        ?string $path,
+        ?bool $secure,
+        ?bool $httpOnly,
+        ?string $sameSite
+    ): self {
+        $cookie = new Cookie($name, $value, $expire, $domain, $path, $secure, $httpOnly, $sameSite);
+        $this->cookies[$name] = $cookie;
         return $this;
     }
 
@@ -56,6 +71,12 @@ class Cookies
     public function remove(string $key): self
     {
         unset($this->cookies[$key]);
+        return $this;
+    }
+
+    public function deleteCookie(string $name): self
+    {
+        $this->cookies[$name]->setValue('');
         return $this;
     }
 
