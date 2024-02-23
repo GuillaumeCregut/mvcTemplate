@@ -74,7 +74,7 @@ class ResponseHandler
             //Send Cookie
             $cookies = $this->cookies->getCookies();
             foreach ($cookies as $cookie) {
-                header('Set-Cookie: ' . $cookie, false, $this->statusCode);
+                header('Set-Cookie: ' . $cookie->toString(), false, $this->statusCode);
             }
             header(sprintf("%s %s %s", $this->version, $this->statusCode, $this->statusText), true, $this->statusCode);
         }
