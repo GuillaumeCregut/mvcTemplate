@@ -24,10 +24,12 @@ class GetConstraints
         $entityReflector = new ReflectionClass($entity);
         foreach ($entityReflector->getProperties() as $property) {
             self::$constraints[$property->name] = [];
-            if (!empty($property->getAttributes(
-                \Editiel98\Kernel\Attribute\Constraints\AbstractConstraints::class,
-                ReflectionAttribute::IS_INSTANCEOF
-            ))) {
+            if (
+                !empty($property->getAttributes(
+                    \Editiel98\Kernel\Attribute\Constraints\AbstractConstraints::class,
+                    ReflectionAttribute::IS_INSTANCEOF
+                ))
+            ) {
                 self::addAttribute($property->name, $property->getAttributes());
             }
         }
