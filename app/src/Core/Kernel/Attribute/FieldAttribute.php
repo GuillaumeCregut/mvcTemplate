@@ -3,9 +3,10 @@
 namespace Editiel98\Kernel\Attribute;
 
 use Attribute;
+use Editiel98\Kernel\Attribute\Constraints\AbstractConstraints;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class FieldAttribute
+class FieldAttribute extends AbstractConstraints
 {
     public function __construct(
         private string $type,
@@ -13,25 +14,25 @@ class FieldAttribute
     ) {
     }
 
-        /**
-         * Get the value of type
-         */
+    /**
+     * Get the value of type
+     */
     public function getType(): string
     {
-            return $this->type;
+        return $this->type;
     }
 
-        /**
-         * Set the value of type
-         */
+    /**
+     * Set the value of type
+     */
 
 
 
-        /**
-         * Get the value of AllowBlank
-         */
+    /**
+     * Get the value of AllowBlank
+     */
     public function isAllowBlank(): ?bool
     {
-            return $this->allowBlank;
+        return $this->allowBlank;
     }
 }
