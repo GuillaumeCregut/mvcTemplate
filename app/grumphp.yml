@@ -18,4 +18,4 @@ grumphp:
             config_file: phpunit.xml
         git_commit_message:
             matchers:
-                must Follow: /^\[(Refacto|Fix|Style|Chore|Feat|Doc|Test)\]:\s\w+:\s\w+/
+                must Follow: /^\[(Refacto|Fix|Style|Chore|Feat|Doc|Test)\]:\s[\s\S]+:\s[\s\S]+/
