@@ -1,11 +1,13 @@
 <?php
 
-namespace Editiel98\Kernel;
+namespace Editiel98\Kernel\Database;
 
 use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\Exception\DbException;
 use Editiel98\Kernel\GetEnv;
+use Error;
 use Exception;
+use InvalidArgumentException;
 use PDO;
 use PDOException;
 
@@ -13,6 +15,7 @@ use PDOException;
  * Database
  * Manage connection with database
  */
+
 class Database
 {
     private string $user;
@@ -100,6 +103,12 @@ class Database
         }
     }
 
+    private function handleDeprecated(int $errno, string $errstr, string $errfile, string $errline): void
+    {
+        var_dump($errno, $errstr, $errfile, $errline);
+        throw new InvalidArgumentException('Class should not be created.');
+    }
+
     /**
      * query
      * Make a PDO query
@@ -110,6 +119,7 @@ class Database
      */
     public function query(string $statement, ?string $className = null): array
     {
+        $old_error_handler = set_error_handler([$this, 'handleDeprecated']);
         try {
             $req = $this->getConnect()->query($statement);
             if (!$req) {
@@ -128,7 +138,11 @@ class Database
         } catch (Exception $e) {
             $emitter = Emitter::getInstance();
             $emitter->emit(Emitter::DATABASE_ERROR, 'database : ' . $e->getMessage());
-            throw new DbException('Erreur DB:  Inconnue', 0, 'Erreur DB:  Inconnue');
+            throw new DbException('Erreur DB:  ' . $e->getMessage(), 0, 'Erreur DB:  Inconnue');
+        } catch (Error $e) {
+            throw new DbException('Deprecated', $e->getCode(), $e->getMessage());
+        } finally {
+            set_error_handler($old_error_handler);
         }
     }
 
@@ -143,8 +157,9 @@ class Database
      * @param boolean|null $single : return unique data or set of datas
      * @return mixed : array or object
      */
-    public function prepare(string $statement, ?string $className, ?array $values = [], ?bool $single = false)
+    public function preparedQuery(string $statement, ?string $className, ?array $values = [], ?bool $single = false)
     {
+        $old_error_handler = set_error_handler([$this, 'handleDeprecated']);
         try {
             $req = $this->getConnect()->prepare($statement);
             $req->execute($values);
@@ -165,6 +180,8 @@ class Database
             $emitter = Emitter::getInstance();
             $emitter->emit(Emitter::DATABASE_ERROR, 'database : ' . $e->getMessage());
             throw new DbException('Erreur Prepare', $errCode, $errMessage);
+        } finally {
+            set_error_handler($old_error_handler);
         }
     }
 
