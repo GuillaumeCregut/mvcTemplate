@@ -5,6 +5,7 @@ namespace Editiel98\Kernel\Database;
 use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\Exception\DbException;
 use Editiel98\Kernel\GetEnv;
+use Editiel98\Interfaces\DatabaseInterface;
 use Error;
 use Exception;
 use InvalidArgumentException;
@@ -16,7 +17,7 @@ use PDOException;
  * Manage connection with database
  */
 
-class Database
+class Database implements DatabaseInterface
 {
     private string $user;
     private string $host;
@@ -105,7 +106,6 @@ class Database
 
     private function handleDeprecated(int $errno, string $errstr, string $errfile, string $errline): void
     {
-        var_dump($errno, $errstr, $errfile, $errline);
         throw new InvalidArgumentException('Class should not be created.');
     }
 
@@ -157,8 +157,12 @@ class Database
      * @param boolean|null $single : return unique data or set of datas
      * @return mixed : array or object
      */
-    public function preparedQuery(string $statement, ?string $className, ?array $values = [], ?bool $single = false)
-    {
+    public function preparedQuery(
+        string $statement,
+        ?string $className,
+        ?array $values = [],
+        ?bool $single = false
+    ): mixed {
         $old_error_handler = set_error_handler([$this, 'handleDeprecated']);
         try {
             $req = $this->getConnect()->prepare($statement);
