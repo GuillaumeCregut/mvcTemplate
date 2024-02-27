@@ -2,243 +2,177 @@
 
 namespace Editiel98\Forms;
 
+use Editiel98\Factory;
 use Editiel98\Forms\Fields\AbstractField;
+use Editiel98\Kernel\CSRFCheck;
+use Editiel98\Kernel\Entity\AbstractEntity;
 use Editiel98\Kernel\WebInterface\RequestHandler;
-use Error;
-use Exception;
 
-abstract class AbstractForm extends AbstractMiniForm
+abstract class AbstractForm
 {
+    use TraitTypeOf;
+
+    /**
+     * @var array<AbstractField>
+     */
+    protected array $fields = [];
+    protected string $class = '';
+    protected string $id = "";
+    protected string $action = '';
+    protected string $token = '';
+    protected string $method = '';
+    protected AbstractEntity $entity;
     /**
      * @var array<mixed>
      */
-    protected array $inputsDatas = [];
+    protected array $datas = [];
+    protected bool $multipart;
     /**
      * @var array<mixed>
      */
-    protected array $errorFields = [];
-    /**
-     * @var array<mixed>
-     */
-    protected array $errorFiles = [];
+    protected array $dataset = [];
 
-    /**
-     * @param array<mixed> $datas  datas from HTML form
-     *
-     * @return bool datas are OK
-     */
-    public function checkFormInputs(array $datas): bool
+    protected CSRFCheck $csrfCheck;
+
+    public function __construct(string $method, string $action, ?bool $multipart = false)
     {
-        if (empty($datas)) {
-            return false;
-        }
-        if (!isset($datas['token'])) {
-            return false;
-        }
-        $token = $datas['token'];
-        if (!$this->csrfCheck->checkToken($token)) {
-            $this->errorFields[] = 'token';
-            return false;
-        }
+        $this->action = $action;
+        $this->method = $method;
+        $this->multipart = $multipart;
+        $session = Factory::getSession();
+        $this->csrfCheck = new CSRFCheck($session);
+    }
 
-        return $this->testInputs($datas);
+    protected function addField(AbstractField $field): self
+    {
+        $name = $field->getName();
+        $this->fields[$name] = $field;
+        return $this;
+    }
+
+    public function getField(string $name): AbstractField
+    {
+        return $this->fields[$name];
     }
 
     /**
-     * @param array<mixed> $datas datas from HTML form
-     *
-     * @return bool datas are OK
+     * @return array<AbstractField>
      */
-    private function testInputs(array $datas): bool
+    public function getFields(): array
     {
-        foreach ($this->getFields() as $field) {
-            $fieldName = $field->getName();
-            //Modifier le if ->return false supprimer le else
-            if (
-                !array_key_exists($fieldName, $datas)
-                && $field->isRequired()
-                && $field->getTypeOf() !== self::TYPE_FILE
-            ) {
-                $this->errorFields[] = $fieldName;
-            } else {
-                if (!empty($datas[$fieldName])) {
-                    $this->processData($fieldName, $datas[$fieldName], $field);
-                }
-                if ($field->getTypeOf() === self::TYPE_FILE) {
-                    $this->processFile($fieldName, $field);
-                }
-            }
-        }
-        $this->processError();
-        return empty($this->errorFields);
+        return $this->fields;
     }
-
-    /**
-     * Check requirement for input data
-     * @param string $name
-     * @param string $value
-     * @param AbstractField $field
-     *
-     * @return bool : data is OK with model requirement
-     */
-    private function processData(string $name, string $value, AbstractField $field): bool
-    {
-        $value = trim($value);
-        $filterFlag = $this->setFilter($field->getTypeOf(), $value);
-        if (!$filterFlag) {
-            return false;
-        }
-        $filter = $filterFlag[0];
-        $flag = $filterFlag[1];
-        try {
-            $filteredValue = $this->filterValue($value, $filter, $flag);
-            if (is_null($filteredValue)) {
-                $this->errorFields[] = $name;
-                return false;
-            }
-            $this->inputsDatas[$name] = $filteredValue;
-            return true;
-        } catch (Exception $e) {
-            throw new Exception('Error in data processing');
-        } catch (Error $e) {
-            throw new Exception('Error in data processing');
-        }
-    }
-
-    /**
-     * @param array<mixed> $files
-     * @param AbstractField $field
-     * @param string $name
-     * @param string $nameField
-     * @return bool
-     */
-    private function parseFiles(array $files, AbstractField $field, string $name, string $nameField): bool
-    {
-        $noError = true;
-        foreach ($files as $file) {
-            if ($file['error'] !== 0 || $file['name'] === '') {
-                if ($field->isRequired()) {
-                    $this->errorFields[] = $name;
-                    $this->errorFiles[$name][] = array('name' => $file['name']);
-                    $noError = false;
-                }
-                continue;
-            }
-            $this->inputsDatas[$nameField][] = array(
-                'tmp_name' => $file['tmp_name'],
-                'name' => $file['name'],
-                'size' => $file['size'],
-                'type' => $file['type'],
-                'full_path' => $file['full_path']
-            );
-        }
-        return $noError;
-    }
-
-    /**
-     * @param string $name : name of field
-     * @param AbstractField $field
-     *
-     * @return bool result.
-     * Datas are stored in class's arrays
-     */
-    private function processFile(string $name, AbstractField $field): bool
-    {
-        $requestHandler = RequestHandler::getInstance();
-        $filesFromRH = $requestHandler->files;
-        $filesFromForm = $filesFromRH->getAll();
-        try {
-            $nameField = $name;
-            $multiple = false;
-            $pos = strpos($name, '[');
-            if ($pos) {
-                $nameField = substr($name, 0, $pos);
-                $multiple = true;
-            }
-            if (!array_key_exists($nameField, $filesFromForm) && $field->isRequired()) {
-                $this->errorFields[] = $name;
-                return false;
-            }
-            if ($multiple) {
-                $files = $this->orderFiles($filesFromForm[$nameField]);
-            } else {
-                $files[] = $filesFromForm[$nameField];
-            }
-            return $this->parseFiles($files, $field, $name, $nameField);
-        } catch (Exception $e) {
-            throw new Exception('Error in file processing');
-        } catch (Error $e) {
-            throw new Exception('Error in file processing');
-        }
-    }
-
-    /**
-     * @param array<mixed> $filesDL
-     *
-     * @return array<mixed>
-     */
-    private function orderFiles(array $filesDL): array
-    {
-        try {
-            $arrayFiles = [];
-            foreach ($filesDL as $title => $files) {
-                foreach ($files as $idFile => $fieldValue) {
-                    $arrayFiles[$idFile][$title] = $fieldValue;
-                }
-            }
-            return $arrayFiles;
-        } catch (Exception $e) {
-            throw new Exception('Error in File field processing');
-        } catch (Error $e) {
-            throw new Exception('Error in File field processing');
-        }
-    }
-
-
-
-    /**
-     * @return array<mixed>|false
-     */
-    public function getInputsDatas(): array|false
-    {
-        if (empty($this->inputsDatas)) {
-            return false;
-        }
-        return $this->inputsDatas;
-    }
-
 
     /**
      * @return array<mixed>
      */
-    public function getErrorFields(): array
+    public function getDataset(): array
     {
-        return $this->errorFields;
+        return $this->dataset;
     }
 
     /**
-     * @return void
+     * @param array<mixed> $dataset
+     *
+     * @return self
      */
-    private function processError(): void
+    public function addDataset(array $dataset): self
     {
-        try {
-            foreach ($this->errorFields as $fieldItem) {
-                $fieldError = $this->getField($fieldItem);
-                $fieldError->setError(true);
-            }
-        } catch (Exception $e) {
-            throw new Exception('Error in field error settings');
-        } catch (Error $e) {
-            throw new Exception('Error in field error settings');
+        $this->dataset[] = $dataset;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of class
+     */
+    public function getClass(): string
+    {
+        return $this->class;
+    }
+
+    /**
+     * Set the value of class
+     */
+    public function setClass(string $class): self
+    {
+        $this->class = $class;
+
+        return $this;
+    }
+    /**
+     * Get the value of id
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return self
+     */
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Close HTML Code for form
+     * @return string
+     */
+    public function endForm(): string
+    {
+        return "</form>";
+    }
+
+    public function startForm(): string
+    {
+        $this->token = $this->csrfCheck->createToken();
+        $form = '<form method="' . $this->method . '"';
+        if (strlen($this->action) === 0) {
+            $form .= ' action=""';
+        } else {
+            $form .= ' action="' . $this->action . '"';
         }
+        if ($this->id !== '') {
+            $form .= ' id="' . $this->id . '"';
+        }
+        if ($this->class !== '') {
+            $form .= ' class="' . $this->class . '"';
+        }
+        if (!empty($this->dataset)) {
+            foreach ($this->dataset as $key => $value) {
+                $form .= ' ' . $key . '="' . $value . '"';
+            }
+        }
+        if ($this->multipart) {
+            $form .= ' enctype="multipart/form-data"';
+        }
+        $form .= '>';
+        $form .= '<input type="hidden" name="token" value="' . $this->token . '">';
+        return $form;
     }
-
 
     /**
-     * @return array<mixed>
+     * Validate if datas from requestHandler are Entity constraints complient
+     * @param RequestHandler $handler
+     *
+     * @return mixed[]
      */
-    public function getErrorFiles(): array
+    protected function validateData(RequestHandler $handler): array | bool
     {
-        return $this->errorFiles;
+        $formValidator = new FormValidator();
+        $datas = $handler->request->getAll();
+        $result = $formValidator->validate($this->entity::class, $datas);
+        if (!$result) {
+            return $formValidator->getErrorInputs();
+        }
+        return $result;
     }
+
+    abstract public function validate(RequestHandler $handler): AbstractEntity | false;
 }
