@@ -1,10 +1,11 @@
 <?php
 
-namespace Editiel98\Kernel;
+namespace Editiel98\Kernel\Database;
 
-use Editiel98\Kernel\Database;
+use Editiel98\Kernel\Database\Database;
 use Editiel98\Kernel\Exception\DbException;
 use Editiel98\Flash;
+use Editiel98\Kernel\Emitter;
 use Exception;
 
 /**
@@ -87,7 +88,7 @@ abstract class AbstractManager
     protected function prepareSQL(string $query, array $vars, bool $single): mixed
     {
         try {
-            $result = $this->db->prepare($query, $this->className, $vars, $single);
+            $result = $this->db->preparedQuery($query, $this->className, $vars, $single);
             return $result;
         } catch (DbException $e) {
             $message = 'SQL : ' . $query . 'a poser problème';
