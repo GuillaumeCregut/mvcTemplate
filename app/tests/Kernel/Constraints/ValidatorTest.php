@@ -42,8 +42,7 @@ class ValidatorTest extends TestCase
 
     public function testValidatorWithDifferentKeys(): void
     {
-        $entity=new \EntitySample();
-        $constraint = GetConstraints::scanEntity($entity);
+        $constraint = GetConstraints::scanEntity(\EntitySample::class);
         $this->assertArrayHasKey('toto',Validator::validate(['Bonjour'=>"sdsdq"],$constraint));
     }
 
@@ -61,29 +60,25 @@ class ValidatorTest extends TestCase
 
     public function testValidatorWithWrongValue(): void
     {
-        $entity=new \EntitySample();
-        $constraint = GetConstraints::scanEntity($entity);
+        $constraint = GetConstraints::scanEntity(\EntitySample::class);
         $this->assertArrayHasKey('toto',Validator::validate(['toto'=>''],$constraint));
     }
 
     public function testValidatorWithOKValue(): void
     {
-        $entity=new \EntitySample();
-        $constraint = GetConstraints::scanEntity($entity);
+        $constraint = GetConstraints::scanEntity(\EntitySample::class);
         $this->assertTrue(Validator::validate(['toto'=>'Bonjour'],$constraint));
     }
 
     public function testValidatorWithNoValuesButNoContraint(): void
     {
-        $entity=new \EntitySample();
-        $constraint = GetConstraints::scanEntity($entity);
+        $constraint = GetConstraints::scanEntity(\EntitySample::class);
         $this->assertTrue(Validator::validate(['toto'=>'Bonjour'],$constraint));
     }
 
     public function testValidatorWithNoValuesButBlankAllowed(): void
     {
-        $entity=new \EntitySample();
-        $constraint = GetConstraints::scanEntity($entity);
+        $constraint = GetConstraints::scanEntity(\EntitySample::class);
         $this->assertTrue(Validator::validate(['toto'=>'Bonjour'],$constraint));
     }
 }
