@@ -2,7 +2,6 @@
 
 namespace Editiel98;
 
-use Editiel98\Kernel\Database;
 use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
@@ -17,8 +16,6 @@ abstract class AbstractController
     protected Session $session;
     protected Flash $flash;
     protected Emitter $emitter;
-    protected Database $dbConnection;
-
     protected bool $hasFlash = false;
     protected int $userId;
     protected int $userRank;
@@ -37,7 +34,6 @@ abstract class AbstractController
             $this->smarty->assignVar('flash', $flashes);
         }
         $this->emitter = Emitter::getInstance();
-        $this->dbConnection = Database::getInstance();
         $this->getCredentials();
     }
 

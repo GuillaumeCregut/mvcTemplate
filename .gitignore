@@ -13,3 +13,4 @@ app/src/templates/test*.*
 app/tests/TotoTest.*
 app/.phpunit.result.cache
 *.bat
+.phpunit.cache

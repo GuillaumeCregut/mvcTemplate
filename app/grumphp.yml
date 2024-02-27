@@ -16,3 +16,6 @@ grumphp:
                 - 'phpmd.xml'
         phpunit:
             config_file: phpunit.xml
+        git_commit_message:
+            matchers:
+                must Follow: /^\[(Refacto|Fix|Style|Chore|Feat|Doc|Test)\]:\s[\s\S]+:\s[\s\S]+/
