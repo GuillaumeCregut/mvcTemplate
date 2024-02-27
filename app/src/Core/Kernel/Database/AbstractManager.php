@@ -2,10 +2,11 @@
 
 namespace Editiel98\Kernel\Database;
 
-use Editiel98\Kernel\Database\Database;
 use Editiel98\Kernel\Exception\DbException;
 use Editiel98\Flash;
+use Editiel98\Interfaces\DatabaseInterface;
 use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Entity\AbstractEntity;
 use Exception;
 
 /**
@@ -23,9 +24,9 @@ abstract class AbstractManager
     /**
      * Instance of the DB connection
      *
-     * @var Database
+     * @var DatabaseInterface
      */
-    protected Database $db;
+    protected DatabaseInterface $db;
 
     /**
      * Class name of the entity
@@ -35,21 +36,43 @@ abstract class AbstractManager
     protected string $className;
 
 
-    public function __construct(Database $db)
+    public function __construct(DatabaseInterface $db, string $classname)
     {
         $this->db = $db;
+        $this->className = $classname;
     }
 
+    /**
+     * @return mixed[]
+     */
+    public function getAll(): array
+    {
+        $query = "SELECT * FROM " . $this->table;
+        return $this->prepareSQL($query, [], false);
+    }
+
+    public function getOneById(int $id): AbstractEntity | false
+    {
+        $query = "SELECT * FROM " . $this->table . " WHERE id=:id";
+        $values = [
+            ':id' => $id
+        ];
+        return $this->prepareSQL($query, $values, true);
+    }
 
     /**
-     * @param mixed $name
+     * @param string $fieldName
+     * @param mixed $value
      *
-     * @return mixed
+     * @return mixed[]
      */
-    public function __get($name): mixed
+    public function getBy(string $fieldName, mixed $value): array | false
     {
-        $method = 'get' . ucfirst($name);
-        return $this->$method();
+        $query = "SELECT * FROM " . $this->table . " WHERE " . $fieldName . '= :value';
+        $values = [
+            ':value' => $value
+        ];
+        return $this->prepareSQL($query, $values, false);
     }
 
     /**
