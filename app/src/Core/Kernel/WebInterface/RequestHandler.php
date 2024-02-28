@@ -65,9 +65,10 @@ class RequestHandler
      * @param mixed[] $server
      * @param mixed[] $cookies
      * @param mixed[] $session
+     * @param mixed[] $files
      * @return void
      */
-    public function init(array $get, array $post, array $server, array $cookies, array $session): void
+    public function init(array $get, array $post, array $server, array $cookies, array $session, array $files): void
     {
         $this->cookies = new ReadOnlyContainer($cookies);
         $this->query = new ReadOnlyContainer($get);
@@ -75,6 +76,7 @@ class RequestHandler
         $this->server = new ReadOnlyContainer($server);
         $this->session = new SessionContainer($session);
         $this->infos = new ReadWriteContainer([]);
+        $this->files = new FilesContainer($files);
         //Check if override
         $this->overRideMethod = $this->testOveride();
     }

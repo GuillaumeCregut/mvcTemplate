@@ -21,7 +21,7 @@ class RequestHandlerTest extends TestCase
     public function testGetValue(): void
     {
         $x = RequestHandler::getInstance();
-        $x->init(['Hello' => 'world'], [], [], [], []);
+        $x->init(['Hello' => 'world'], [], [], [], [],[]);
         $y = RequestHandler::getInstance();
         $query = $y->query->hasKey('Hello');
         $this->assertTrue($query);
@@ -30,7 +30,7 @@ class RequestHandlerTest extends TestCase
     public function testGetURI(): void
     {
         $rh = RequestHandler::getInstance();
-        $rh->init([], [], ['REQUEST_URI' => '/test'], [], []);
+        $rh->init([], [], ['REQUEST_URI' => '/test'], [], [],[]);
         $uri = $rh->getURI();
         $this->assertEquals('/test', $uri);
     }
@@ -38,7 +38,7 @@ class RequestHandlerTest extends TestCase
     public function testGetMethod(): void
     {
         $rh = RequestHandler::getInstance();
-        $rh->init([], [], ['REQUEST_METHOD' => 'GET'], [], []);
+        $rh->init([], [], ['REQUEST_METHOD' => 'GET'], [], [],[]);
         $method = $rh->getMethod();
         $this->assertEquals('GET', $method);
     }
@@ -46,7 +46,7 @@ class RequestHandlerTest extends TestCase
     public function testGetOverideMethod(): void
     {
         $rh = RequestHandler::getInstance();
-        $rh->init([], ['override_method' => 'PUT'], ['REQUEST_METHOD' => 'POST'], [], []);
+        $rh->init([], ['override_method' => 'PUT'], ['REQUEST_METHOD' => 'POST'], [], [],[]);
         $method = $rh->getMethod();
         $this->assertEquals('PUT', $method);
     }
