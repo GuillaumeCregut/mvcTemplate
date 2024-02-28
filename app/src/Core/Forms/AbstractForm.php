@@ -21,7 +21,10 @@ abstract class AbstractForm
     protected string $action = '';
     protected string $token = '';
     protected string $method = '';
-    protected AbstractEntity $entity;
+    /**
+     * @var class-string
+     */
+    protected string $entity;
     /**
      * @var array<mixed>
      */
@@ -31,6 +34,8 @@ abstract class AbstractForm
      * @var array<mixed>
      */
     protected array $dataset = [];
+
+    protected RequestHandler $handler;
 
     protected CSRFCheck $csrfCheck;
 
@@ -159,20 +164,44 @@ abstract class AbstractForm
 
     /**
      * Validate if datas from requestHandler are Entity constraints complient
-     * @param RequestHandler $handler
      *
      * @return mixed[]
      */
-    protected function validateData(RequestHandler $handler): array | bool
+    protected function validateData(): array | bool
     {
         $formValidator = new FormValidator();
-        $datas = $handler->request->getAll();
-        $result = $formValidator->validate($this->entity::class, $datas);
+        $datas = $this->handler->request->getAll();
+        $result = $formValidator->validate($this->entity, $datas);
         if (!$result) {
             return $formValidator->getErrorInputs();
         }
         return $result;
     }
 
-    abstract public function validate(RequestHandler $handler): AbstractEntity | false;
+    public function handleRequest(RequestHandler $handler): void
+    {
+        $this->handler = $handler;
+    }
+
+    public function isSubmit(): bool
+    {
+        $allowMethod = ['POST', 'PUT', 'PATCH', 'DELETE'];
+        if (!in_array($this->handler->getMethod(), $allowMethod)) {
+            return false;
+        }
+        $posts = $this->handler->request->getAll();
+        $files = $this->handler->files->getAll();
+        $filesPresent = false;
+        //TODO
+        //Check if files presents and if so, add them to the return
+        return (!empty($posts));
+    }
+
+    protected function inflateEntity(): AbstractEntity
+    {
+        $hydrator = new Hydrator();
+        $values = $this->handler->request->getAll();
+        return $hydrator->hydrate($this->entity, $values);
+    }
+    abstract public function validate(): AbstractEntity | false;
 }
