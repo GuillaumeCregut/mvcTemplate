@@ -30,7 +30,7 @@ class RequestHandler
     protected bool $overRideMethod = false;
 
     //For $_POST datas
-    public ReadOnlyContainer $request;
+    public ReadWriteContainer $request;
 
     //For GET datas
     public ReadOnlyContainer $query;
@@ -72,7 +72,7 @@ class RequestHandler
     {
         $this->cookies = new ReadOnlyContainer($cookies);
         $this->query = new ReadOnlyContainer($get);
-        $this->request = new ReadOnlyContainer($post);
+        $this->request = new ReadWriteContainer($post);
         $this->server = new ReadOnlyContainer($server);
         $this->session = new SessionContainer($session);
         $this->infos = new ReadWriteContainer([]);
