@@ -2,11 +2,12 @@
 
 namespace Editiel98\Forms;
 
-use Editiel98\Factory;
 use Editiel98\Forms\Fields\AbstractField;
 use Editiel98\Kernel\CSRFCheck;
 use Editiel98\Kernel\Entity\AbstractEntity;
+use Editiel98\Kernel\Exception\WebInterfaceException;
 use Editiel98\Kernel\WebInterface\RequestHandler;
+use Editiel98\Session;
 
 abstract class AbstractForm
 {
@@ -44,7 +45,7 @@ abstract class AbstractForm
         $this->action = $action;
         $this->method = $method;
         $this->multipart = $multipart;
-        $session = Factory::getSession();
+        $session = new Session();
         $this->csrfCheck = new CSRFCheck($session);
     }
 
@@ -169,6 +170,13 @@ abstract class AbstractForm
      */
     protected function validateData(): array | bool
     {
+        $token = $this->handler->getCSRFToken();
+        if (!$token) {
+            throw new WebInterfaceException('No token provided');
+        }
+        if (!$this->csrfCheck->checkToken($token)) {
+            throw new WebInterfaceException('Bad token provided');
+        }
         $formValidator = new FormValidator();
         $datas = $this->handler->request->getAll();
         $result = $formValidator->validate($this->entity, $datas);
