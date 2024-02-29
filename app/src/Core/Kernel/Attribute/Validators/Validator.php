@@ -3,6 +3,7 @@
 namespace Editiel98\Kernel\Attribute\Validators;
 
 use Editiel98\Kernel\Exception\ValidationExceptionEmpty;
+use Editiel98\Kernel\WebInterface\RequestHandler;
 
 class Validator
 {
@@ -30,6 +31,14 @@ class Validator
                 self::checkField($validators, $value, $fieldname, $errorArray);
             } else {
                 //$fields n'existe pas dans le formulaire
+                //Vérifier si il y a un validator bool
+                $isBoolField = self::isCheckBox($validators);
+                if ($isBoolField) {
+                    $handler = RequestHandler::getInstance();
+                    $handler->request->setValue($fieldname, false);
+                    continue;
+                }
+                //TODO
                 if (empty($validators)) {
                     continue;
                 }
@@ -58,5 +67,20 @@ class Validator
                 $errorArray[$fieldname][] = $newValidator->getMessage();
             }
         }
+    }
+
+    /**
+     * @param mixed[] $validators
+     *
+     * @return bool
+     */
+    private static function isCheckBox(array $validators): bool
+    {
+        foreach ($validators as $validator) {
+            if ($validator->getName() === 'Editiel98\Kernel\Attribute\Constraints\CheckBoxConstraint') {
+                return true;
+            }
+        }
+        return false;
     }
 }
