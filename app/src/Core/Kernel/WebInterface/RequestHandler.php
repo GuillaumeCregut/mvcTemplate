@@ -181,4 +181,13 @@ class RequestHandler
         }
         return false;
     }
+
+    public function getCSRFToken(): string | false
+    {
+        if ($this->request->hasKey('token')) {
+            return $this->request->getParam('token');
+        } else {
+            return false;
+        }
+    }
 }
