@@ -35,7 +35,7 @@ class Validator
                 $isBoolField = self::isCheckBox($validators);
                 if ($isBoolField) {
                     $handler = RequestHandler::getInstance();
-                    $handler->request->setValue($fieldname, false);
+                    $handler->request->setValue($fieldname, null);
                     continue;
                 }
                 //TODO
