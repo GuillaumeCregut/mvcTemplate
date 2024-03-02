@@ -38,7 +38,6 @@ class Validator
                     $handler->request->setValue($fieldname, null);
                     continue;
                 }
-                //TODO
                 if (empty($validators)) {
                     continue;
                 }
@@ -61,11 +60,13 @@ class Validator
      */
     private static function checkField(array $validators, mixed $value, string $fieldname, array &$errorArray): void
     {
+        $count = 0;
         foreach ($validators as $validator) {
             $newValidator = $validator->newInstance();
             if (!$newValidator->isOk($value)) {
-                $errorArray[$fieldname][] = $newValidator->getMessage();
+                $errorArray[$fieldname]['error_' . $count] = $newValidator->getMessage();
             }
+            $count++;
         }
     }
 
