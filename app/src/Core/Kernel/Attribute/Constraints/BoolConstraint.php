@@ -14,6 +14,9 @@ class BoolConstraint extends AbstractConstraints implements ConstraintInterface
 
     public function isOK(mixed $value): bool
     {
+        if (null === $value) {
+            return true;
+        }
         if (!is_bool($value) && ($value !== 'on')) {
             return false;
         }

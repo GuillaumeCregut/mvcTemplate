@@ -10,6 +10,9 @@ class DateConstraint extends AbstractConstraints implements ConstraintInterface
     }
     public function isOK(mixed $value): bool
     {
+        if (null === $value) {
+            return true;
+        }
         $flag = "/\d{4}-(0[1-9]|1[1,2])-(0[1-9]|[12][0-9]|3[01])$/";
         $result = filter_var(
             $value,

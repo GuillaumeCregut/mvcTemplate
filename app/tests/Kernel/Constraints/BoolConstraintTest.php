@@ -8,7 +8,7 @@ class BoolConstraintTest extends TestCase
     public function testWithoutValue(): void
     {
         $constraint = new BoolConstraint();
-        $this->assertFalse($constraint->isOK(null));
+        $this->assertTrue($constraint->isOK(null));
     }
 
     public function testWithStringValue(): void
