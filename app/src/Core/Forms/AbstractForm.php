@@ -181,6 +181,14 @@ abstract class AbstractForm
         $datas = $this->handler->request->getAll();
         $result = $formValidator->validate($this->entity, $datas);
         if (!$result) {
+            //TODO Here set fields with errors
+            /*
+                [fieldName=>[
+                    'state'=>'missing',
+                    'error_0'=>'This field is required',
+                    'error_1'=>'This field is required',
+                ]]
+            */
             return $formValidator->getErrorInputs();
         }
         return $result;
@@ -200,8 +208,8 @@ abstract class AbstractForm
         $posts = $this->handler->request->getAll();
         $files = $this->handler->files->getAll();
         $filesPresent = false;
-        //TODO
-        //Check if files presents and if so, add them to the return
+        //TODO Check if files presents and if so, add them to the return
+
         return (!empty($posts));
     }
 
