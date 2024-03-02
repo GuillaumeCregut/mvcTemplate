@@ -14,7 +14,6 @@ class FloatConstraint extends AbstractConstraints implements ConstraintInterface
             return true;
         }
         if (is_float($value)) {
-            var_dump('isfloat');
             return true;
         }
         $floated = (float) $value;
