@@ -2,6 +2,8 @@
 
 namespace Editiel98\Kernel\Attribute\Constraints;
 
+use DateTime;
+
 class DateConstraint extends AbstractConstraints implements ConstraintInterface
 {
     public function __construct()
@@ -23,7 +25,7 @@ class DateConstraint extends AbstractConstraints implements ConstraintInterface
             return false;
         }
         try {
-            $test = new \DateTime($value);
+            new DateTime($value);
             return true;
         } catch (\Exception $e) {
             return false;
