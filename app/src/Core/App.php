@@ -32,7 +32,7 @@ class App
             self::$timeStart = microtime(true);
         }
         $requestHandler = RequestHandler::getInstance();
-        $requestHandler->init($_GET, $_POST, $_SERVER, $_COOKIE, $_SESSION);
+        $requestHandler->init($_GET, $_POST, $_SERVER, $_COOKIE, $_SESSION, $_FILES);
         $this->setEmitter();
         $controllerInfos = Routing::decodeURI($requestHandler->getURI());
         if (empty($controllerInfos)) {

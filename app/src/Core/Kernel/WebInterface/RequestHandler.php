@@ -30,7 +30,7 @@ class RequestHandler
     protected bool $overRideMethod = false;
 
     //For $_POST datas
-    public ReadOnlyContainer $request;
+    public ReadWriteContainer $request;
 
     //For GET datas
     public ReadOnlyContainer $query;
@@ -65,16 +65,18 @@ class RequestHandler
      * @param mixed[] $server
      * @param mixed[] $cookies
      * @param mixed[] $session
+     * @param mixed[] $files
      * @return void
      */
-    public function init(array $get, array $post, array $server, array $cookies, array $session): void
+    public function init(array $get, array $post, array $server, array $cookies, array $session, array $files): void
     {
         $this->cookies = new ReadOnlyContainer($cookies);
         $this->query = new ReadOnlyContainer($get);
-        $this->request = new ReadOnlyContainer($post);
+        $this->request = new ReadWriteContainer($post);
         $this->server = new ReadOnlyContainer($server);
         $this->session = new SessionContainer($session);
         $this->infos = new ReadWriteContainer([]);
+        $this->files = new FilesContainer($files);
         //Check if override
         $this->overRideMethod = $this->testOveride();
     }
@@ -178,5 +180,14 @@ class RequestHandler
             return $this->server->getParam('SERVER_PROTOCOL');
         }
         return false;
+    }
+
+    public function getCSRFToken(): string | false
+    {
+        if ($this->request->hasKey('token')) {
+            return $this->request->getParam('token');
+        } else {
+            return false;
+        }
     }
 }

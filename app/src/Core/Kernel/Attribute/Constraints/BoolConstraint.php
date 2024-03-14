@@ -5,11 +5,11 @@ namespace Editiel98\Kernel\Attribute\Constraints;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class StringConstraint extends AbstractConstraints implements ConstraintInterface
+class BoolConstraint extends AbstractConstraints implements ConstraintInterface
 {
     public function __construct()
     {
-        $this->message = "Cette valeur doit être un texte";
+        $this->message = "Cette valeur doit être un booléen";
     }
 
     public function isOK(mixed $value): bool
@@ -17,7 +17,7 @@ class StringConstraint extends AbstractConstraints implements ConstraintInterfac
         if (null === $value) {
             return true;
         }
-        if (!is_string($value)) {
+        if (!is_bool($value) && ($value !== 'on')) {
             return false;
         }
         return true;

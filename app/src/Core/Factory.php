@@ -2,9 +2,7 @@
 
 namespace Editiel98;
 
-use Editiel98\Kernel\AbstractManager;
-use Editiel98\Kernel\Database;
-use Editiel98\Kernel\Entity\AbstractEntity;
+use Editiel98\Kernel\Database\Database;
 use Editiel98\Templates\SmartyEditiel;
 
 class Factory
@@ -38,18 +36,6 @@ class Factory
         return self::$instance;
     }
 
-    /**
-     * return a new Entity
-     * @param string $name : name of entity to create
-     *
-     * @return AbstractEntity
-     *//*
-    public static function getEntity(string $name): AbstractEntity
-    {
-        $className = 'App\\Entity\\' . ucFirst($name);
-        return new $className;
-    }
-*/
 
     /**
      * return instance of Database
@@ -62,22 +48,6 @@ class Factory
         }
         return self::$db;
     }
-
-
-    /**
-     * @param string $name
-     *
-     * @return AbstractManager
-     *//*
-    public static function getManager(string $name): AbstractManager
-    {
-        if (is_null(self::$db)) {
-            self::getdB();
-        }
-        $className = 'App\\Manager\\' . ucFirst($name);
-        return new $className(self::$db);
-    }*/
-
 
     /**
      * @return SmartyEditiel
