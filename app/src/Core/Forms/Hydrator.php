@@ -68,11 +68,10 @@ class Hydrator
      */
     private function addElement(AbstractEntity &$entity, string $property, string $type, mixed $value): void
     {
-        //TODO pacify value
         $method = 'set' . ucfirst($property);
         switch ($type) {
             case 'string':
-                $newValue = (string) $value;
+                $newValue = (string) htmlspecialchars($value, ENT_NOQUOTES, 'UTF-8');
                 break;
             case 'int':
                 $newValue = (int) $value;
