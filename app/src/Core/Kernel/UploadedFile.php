@@ -15,14 +15,21 @@ class UploadedFile extends File
     private string $OriginalName;
     private string|null $mimeType;
     private int | null $error;
+    private int $size;
 
     //Ne sera appeler que lorsqu'un fichier est uploadé, via la méthode de formulaire qui va bien
 
-    public function __construct(string $path, string $OriginalName, ?string $mimeType = null, ?int $error = null)
-    {
-        $this->OriginalName = $this->getName($OriginalName);
+    public function __construct(
+        string $path,
+        string $OriginalName,
+        int $size,
+        ?string $mimeType = null,
+        ?int $error = null
+    ) {
+        $this->OriginalName = $OriginalName;
         $this->mimeType = $mimeType ?: 'application/octet-stream';
         $this->error = $error ?: \UPLOAD_ERR_OK;
+        $this->size = $size;
         parent::__construct($path, \UPLOAD_ERR_OK === $this->error);
     }
 
@@ -88,5 +95,13 @@ class UploadedFile extends File
         ];
         $message = $errorsMessages[$error] ?? 'The file was not uploaded due to an unknown error.';
         return $message;
+    }
+
+    /**
+     * Get the value of size
+     */
+    public function getSize(): int
+    {
+        return $this->size;
     }
 }
