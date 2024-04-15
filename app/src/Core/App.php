@@ -22,6 +22,11 @@ class App
      */
     public function run(): void
     {
+        session_set_cookie_params([
+            'httponly' => true,
+            'secure' => true,
+            'samesite' => 'lax'
+        ]);
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
