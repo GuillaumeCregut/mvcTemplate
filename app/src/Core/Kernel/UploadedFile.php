@@ -78,6 +78,7 @@ class UploadedFile extends File
                 throw new Exception("Could not move the file");
             }
             @chmod($target, 0666 & ~umask());
+            return $target;
         }
         throw new Exception($this->getErrorMessage($this->error));
     }
