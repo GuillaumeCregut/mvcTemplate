@@ -6,6 +6,7 @@ use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
 use Editiel98\Kernel\WebInterface\ResponseHandler;
+use Editiel98\Kernel\WebInterface\RestResponseHandler;
 use Editiel98\Templates\DebugController;
 use Editiel98\Templates\SmartyEditiel;
 use Exception;
@@ -90,6 +91,25 @@ abstract class AbstractController
         $rhandler = new ResponseHandler();
         $rhandler->setHeaderResponse(302, 'Found');
         $rhandler->addHeader('Location', $routes[$routeName]);
+        return $rhandler;
+    }
+
+    /**
+     * @param mixed[] $content
+     * @param int $status
+     * @param string $code
+     *
+     * @return RestResponseHandler
+     */
+    protected function jsonResponse(array $content, int $status = 200, string $code = 'OK'): RestResponseHandler
+    {
+        $rhandler = new RestResponseHandler();
+        $rhandler->setHeaderResponse($status, $code);
+        try {
+            $rhandler->prepareJson($content);
+        } catch (\Exception $e) {
+            throw new \Exception('Error in JSON encoding');
+        }
         return $rhandler;
     }
 }
