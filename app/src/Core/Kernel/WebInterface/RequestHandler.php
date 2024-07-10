@@ -49,6 +49,11 @@ class RequestHandler
 
     public ReadWriteContainer $infos;
 
+    /**
+     * @var mixed[]
+     */
+    public array $content = [];
+
     private static ?RequestHandler $instance = null;
 
     public static function getInstance(): RequestHandler
@@ -77,6 +82,19 @@ class RequestHandler
         $this->session = new SessionContainer($session);
         $this->infos = new ReadWriteContainer([]);
         $this->files = new FilesContainer($files);
+        //Use phpinput content to get JSON content
+        $json = file_get_contents('php://input');
+        if ($json) {
+            try {
+                $content = json_decode($json, true, 512, \JSON_BIGINT_AS_STRING | \JSON_THROW_ON_ERROR);
+                if (!is_null($content)) {
+                    $this->content = $content;
+                }
+            } catch (\JsonException $e) {
+                $content = [];
+            }
+        }
+
         //Check if override
         $this->overRideMethod = $this->testOveride();
     }
@@ -189,5 +207,13 @@ class RequestHandler
         } else {
             return false;
         }
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getContent(): array
+    {
+        return $this->content;
     }
 }
