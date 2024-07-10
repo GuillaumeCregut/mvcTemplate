@@ -103,6 +103,10 @@ abstract class AbstractController
      */
     protected function jsonResponse(array $content, int $status = 200, string $code = 'OK'): RestResponseHandler
     {
+        $codeKey = strval($status);
+        if (array_key_exists($codeKey, ResponseHandler::STATUS_CODE)) {
+            $code = ResponseHandler::STATUS_CODE[$codeKey];
+        }
         $rhandler = new RestResponseHandler();
         $rhandler->setHeaderResponse($status, $code);
         try {
