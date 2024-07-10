@@ -81,20 +81,18 @@ class ResponseHandler
         $this->headersSent = true;
     }
 
-    public function sendContent(): self
+    public function sendContent(): string
     {
-        echo $this->content;
-        return $this;
+        return $this->content;
     }
 
-    public function send(?int $code = 200, ?string $status = 'OK', ?string $content = ''): self
+    public function send(?int $code = 200, ?string $status = 'OK', ?string $content = ''): string
     {
         $this->sendHeaders($code, $status);
         if (!isset($this->content)) {
             $this->content = $content;
         }
-        $this->sendContent();
-        return $this;
+        return $this->sendContent();
     }
 
     /**

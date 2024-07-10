@@ -1,19 +1,19 @@
 <?php
 
-use Editiel98\Kernel\WebInterface\RequestHandler;
-use Editiel98\Kernel\WebInterface\ResponseHandler;
 use PHPUnit\Framework\TestCase;
+use Editiel98\Kernel\WebInterface\RequestHandler;
+use Editiel98\Kernel\WebInterface\RestResponseHandler;
 
-class ResponseHandlerTest extends TestCase
+class RestResponseHandlerTest extends TestCase
 {
     private RequestHandler $handler;
-    private ResponseHandler $response;
+    private RestResponseHandler $response;
 
     public function setUp(): void
     {
         $this->handler = RequestHandler::getInstance();
         $this->handler->init([], [], [], [], [],[]);
-        $this->response = new ResponseHandler();
+        $this->response = new RestResponseHandler();
     }
 
     public function testSetHeaderResponse(): void
@@ -74,5 +74,11 @@ class ResponseHandlerTest extends TestCase
         $this->assertArrayHasKey('Date',$this->response->getHeaders()->getHeaders());
     }
 
-  
+
+    public function testSendWithContent(): void
+    {
+        $this->response->prepareJson(['hello'=>'world']);
+        $test=$this->response->send();
+        $this->assertJson($test);
+    }
 }
