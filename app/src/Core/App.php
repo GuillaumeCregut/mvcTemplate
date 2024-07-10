@@ -52,7 +52,7 @@ class App
             $method = $controllerInfos['method'];
             $requestHandler->infos->setValue('Method', $method);
             $response = $controller->$method(...$controllerInfos['params']);
-            $response->send();
+            echo $response->send();
         } catch (Error $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
