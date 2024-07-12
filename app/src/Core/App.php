@@ -2,20 +2,20 @@
 
 namespace Editiel98;
 
-use Editiel98\Kernel\Emitter;
-use Editiel98\Kernel\GetEnv;
-use Editiel98\Kernel\Logger\ErrorLogger;
-use Editiel98\Kernel\Logger\WarnLogger;
-use Editiel98\Kernel\Routing\Routing;
-use Editiel98\Kernel\WebInterface\RequestHandler;
 use Error;
 use Exception;
-use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
+use Editiel98\Kernel\GetEnv;
+use Editiel98\Kernel\Routing\Routing;
+use Whoops\Handler\PrettyPageHandler;
+use Editiel98\Kernel\Logger\WarnLogger;
+use Editiel98\Kernel\Logger\ErrorLogger;
+use Editiel98\Kernel\Events\EventSubcriber;
+use Editiel98\Kernel\Events\SystemEvents;
+use Editiel98\Kernel\WebInterface\RequestHandler;
 
 class App
 {
-    private Emitter $emitter;
     public static float $timeStart;
     /**
      * @return void
@@ -81,9 +81,8 @@ class App
      */
     private function setEmitter(): void
     {
-        $this->emitter = Emitter::getInstance();
-        $this->emitter->on(
-            Emitter::DATABASE_ERROR,
+        EventSubcriber::subscribe(
+            SystemEvents::DATABASE_ERROR,
             function ($message) {
                 $logger = new ErrorLogger();
                 if ($logger->storeToFile($message)) {
@@ -91,8 +90,8 @@ class App
                 }
             }
         );
-        $this->emitter->on(
-            Emitter::MAIL_ERROR,
+        EventSubcriber::subscribe(
+            SystemEvents::MAIL_ERROR,
             function ($to) {
                 $logger = new WarnLogger();
                 $message = "L'envoi du mail à " . $to . ' a échoué';

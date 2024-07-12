@@ -2,15 +2,16 @@
 
 namespace Editiel98\Kernel\Database;
 
-use Editiel98\Kernel\Emitter;
-use Editiel98\Kernel\Exception\DbException;
-use Editiel98\Kernel\GetEnv;
-use Editiel98\Interfaces\DatabaseInterface;
+use PDO;
 use Error;
 use Exception;
-use InvalidArgumentException;
-use PDO;
 use PDOException;
+use Editiel98\Kernel\GetEnv;
+use InvalidArgumentException;
+use Editiel98\Kernel\Events\EventManager;
+use Editiel98\Kernel\Events\SystemEvents;
+use Editiel98\Interfaces\DatabaseInterface;
+use Editiel98\Kernel\Exception\DbException;
 
 /**
  * Database
@@ -24,6 +25,7 @@ class Database implements DatabaseInterface
     private string $name;
     private string $pass;
     private string $port;
+    private EventManager $emitter;
     /**
      * @var PDO
      */
@@ -36,6 +38,7 @@ class Database implements DatabaseInterface
     public function __construct()
     {
         $this->loadCredentials();
+        $this->emitter = EventManager::create();
     }
 
     /**
@@ -75,8 +78,7 @@ class Database implements DatabaseInterface
             } catch (PDOException $e) {
                 $errCode = $e->getCode();
                 $errMessage = $e->getMessage();
-                $emitter = Emitter::getInstance();
-                $emitter->emit(Emitter::DATABASE_ERROR, 'database : ' . $errMessage);
+                $this->emitter->emit(SystemEvents::DATABASE_ERROR, 'database : ' . $errMessage);
                 throw new DbException('Erreur de connexion à la base', $errCode, $errMessage);
             }
         }
@@ -98,8 +100,7 @@ class Database implements DatabaseInterface
             $this->host = GetEnv::getEnvValue('dbhost');
             $this->port = GetEnv::getEnvValue('dbport');
         } catch (Exception $e) {
-            $emitter = Emitter::getInstance();
-            $emitter->emit(Emitter::DATABASE_ERROR, 'database : Impossible de lire les credentials');
+            $this->emitter->emit(SystemEvents::DATABASE_ERROR, 'database : Impossible de lire les credentials');
             throw new Exception('Impossible de lire les credentials');
         }
     }
@@ -136,8 +137,7 @@ class Database implements DatabaseInterface
             $errMessage = $e->getMessage();
             throw new DbException('Erreur Query', $errCode, $errMessage);
         } catch (Exception $e) {
-            $emitter = Emitter::getInstance();
-            $emitter->emit(Emitter::DATABASE_ERROR, 'database : ' . $e->getMessage());
+            $this->emitter->emit(SystemEvents::DATABASE_ERROR, 'database : ' . $e->getMessage());
             throw new DbException('Erreur DB:  ' . $e->getMessage(), 0, 'Erreur DB:  Inconnue');
         } catch (Error $e) {
             throw new DbException('Deprecated', $e->getCode(), $e->getMessage());
@@ -181,8 +181,7 @@ class Database implements DatabaseInterface
         } catch (PDOException $e) {
             $errCode = intVal($e->getCode());
             $errMessage = $e->getMessage();
-            $emitter = Emitter::getInstance();
-            $emitter->emit(Emitter::DATABASE_ERROR, 'database : ' . $e->getMessage());
+            $this->emitter->emit(SystemEvents::DATABASE_ERROR, 'database : ' . $e->getMessage());
             throw new DbException('Erreur Prepare', $errCode, $errMessage);
         } finally {
             set_error_handler($old_error_handler);
@@ -207,8 +206,7 @@ class Database implements DatabaseInterface
         } catch (Exception $e) {
             $errCode = intVal($e->getCode());
             $errMessage = $e->getMessage();
-            $emitter = Emitter::getInstance();
-            $emitter->emit(Emitter::DATABASE_ERROR, 'database : ' . $e->getMessage());
+            $this->emitter->emit(SystemEvents::DATABASE_ERROR, 'database : ' . $e->getMessage());
             throw new DbException('Erreur Exec', $errCode, $errMessage);
         }
     }
@@ -235,8 +233,7 @@ class Database implements DatabaseInterface
         } catch (Exception $e) {
             $errCode = intVal($e->getCode());
             $errMessage = $e->getMessage();
-            $emitter = Emitter::getInstance();
-            $emitter->emit(Emitter::DATABASE_ERROR, 'database : ' . $e->getMessage());
+            $this->emitter->emit(SystemEvents::DATABASE_ERROR, 'database : ' . $e->getMessage());
             throw new DbException('Erreur Exec', $errCode, $errMessage);
         }
     }

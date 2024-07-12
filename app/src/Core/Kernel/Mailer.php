@@ -2,7 +2,8 @@
 
 namespace Editiel98\Kernel;
 
-use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Events\EventManager;
+use Editiel98\Kernel\Events\SystemEvents;
 use Editiel98\Templates\SmartyEditiel;
 use Exception;
 
@@ -61,8 +62,8 @@ class Mailer
         try {
             $mailSent = mail($to, $subject, $message, $headers);
             if (!$mailSent) {
-                $emitter = Emitter::getInstance();
-                $emitter->emit(Emitter::MAIL_ERROR, $to);
+                $emitter = EventManager::create();
+                $emitter->emit(SystemEvents::MAIL_ERROR, $to);
             }
             return $mailSent;
         } catch (Exception $e) {
