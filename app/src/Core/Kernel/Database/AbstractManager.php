@@ -5,8 +5,9 @@ namespace Editiel98\Kernel\Database;
 use Editiel98\Kernel\Exception\DbException;
 use Editiel98\Flash;
 use Editiel98\Interfaces\DatabaseInterface;
-use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\Entity\AbstractEntity;
+use Editiel98\Kernel\Events\EventManager;
+use Editiel98\Kernel\Events\SystemEvents;
 use Exception;
 
 /**
@@ -20,6 +21,7 @@ abstract class AbstractManager
      * @var string
      */
     protected string $table;
+    protected EventManager $emitter;
 
     /**
      * Instance of the DB connection
@@ -40,6 +42,7 @@ abstract class AbstractManager
     {
         $this->db = $db;
         $this->className = $classname;
+        $this->emitter = EventManager::create();
     }
 
     /**
@@ -94,8 +97,7 @@ abstract class AbstractManager
                 return false;
             }
             $message = 'SQL : ' . $query . 'a poser problème';
-            $emitter = Emitter::getInstance();
-            $emitter->emit(Emitter::DATABASE_ERROR, $message);
+            $this->emitter->emit(SystemEvents::DATABASE_ERROR, $message);
             throw new Exception('Une erreur est survenue');
         }
     }
@@ -115,8 +117,7 @@ abstract class AbstractManager
             return $result;
         } catch (DbException $e) {
             $message = 'SQL : ' . $query . 'a poser problème';
-            $emitter = Emitter::getInstance();
-            $emitter->emit(Emitter::DATABASE_ERROR, $message);
+            $this->emitter->emit(SystemEvents::DATABASE_ERROR, $message);
             throw new Exception('Une erreur est survenue');
         }
     }
