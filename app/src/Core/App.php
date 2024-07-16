@@ -10,13 +10,19 @@ use Editiel98\Kernel\Routing\Routing;
 use Whoops\Handler\PrettyPageHandler;
 use Editiel98\Kernel\Logger\WarnLogger;
 use Editiel98\Kernel\Logger\ErrorLogger;
-use Editiel98\Kernel\Events\EventSubcriber;
 use Editiel98\Kernel\Events\SystemEvents;
+use Editiel98\Kernel\Events\EventDispatcher;
+use Editiel98\Kernel\Events\EventSubscriber;
+use Editiel98\Kernel\Events\ListenerProvider;
 use Editiel98\Kernel\WebInterface\RequestHandler;
+use Editiel98\Kernel\Events\EventsKernel\InitEventKernel;
+use Editiel98\Kernel\Events\EventsKernel\InitKernelEvent;
 
 class App
 {
     public static float $timeStart;
+    private EventDispatcher $dispatcher;
+    private ListenerProvider $provider;
     /**
      * @return void
      */
@@ -38,6 +44,9 @@ class App
             $whoops->register();
             self::$timeStart = microtime(true);
         }
+        $this->provider = ListenerProvider::getInstance();
+        $this->dispatcher = EventDispatcher::getInstance($this->provider);
+        $this->dispatcher->dispatch(new InitKernelEvent());
         $requestHandler = RequestHandler::getInstance();
         $requestHandler->init($_GET, $_POST, $_SERVER, $_COOKIE, $_SESSION, $_FILES);
         $this->setEmitter();
@@ -81,7 +90,7 @@ class App
      */
     private function setEmitter(): void
     {
-        EventSubcriber::subscribe(
+        EventSubscriber::subscribe(
             SystemEvents::DATABASE_ERROR,
             function ($message) {
                 $logger = new ErrorLogger();
@@ -90,7 +99,7 @@ class App
                 }
             }
         );
-        EventSubcriber::subscribe(
+        EventSubscriber::subscribe(
             SystemEvents::MAIL_ERROR,
             function ($to) {
                 $logger = new WarnLogger();
