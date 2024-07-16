@@ -2,7 +2,7 @@
 
 namespace Editiel98\Kernel\Events;
 
-class EventSubcriber implements EventSubscriberInterface
+class EventSubscriber implements EventSubscriberInterface
 {
     public static function subscribe(string $event, callable $callback): void
     {
