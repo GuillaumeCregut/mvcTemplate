@@ -2,7 +2,6 @@
 
 namespace Editiel98;
 
-use Editiel98\Kernel\Emitter;
 use Editiel98\Kernel\Events\EventManager;
 use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
