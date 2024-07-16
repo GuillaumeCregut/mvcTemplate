@@ -3,6 +3,7 @@
 namespace Editiel98;
 
 use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Events\EventManager;
 use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
 use Editiel98\Kernel\WebInterface\ResponseHandler;
@@ -16,7 +17,7 @@ abstract class AbstractController
     protected SmartyEditiel $smarty;
     protected Session $session;
     protected Flash $flash;
-    protected Emitter $emitter;
+    protected EventManager $emitter;
     protected bool $hasFlash = false;
     protected int $userId;
     protected int $userRank;
@@ -34,7 +35,7 @@ abstract class AbstractController
             $flashes = $this->flash->getFlash();
             $this->smarty->assignVar('flash', $flashes);
         }
-        $this->emitter = Emitter::getInstance();
+        $this->emitter = EventManager::create();
         $this->getCredentials();
     }
 
