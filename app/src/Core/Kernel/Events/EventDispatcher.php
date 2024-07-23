@@ -35,11 +35,13 @@ class EventDispatcher implements EventDispatcherInterface
             return $event;
         }
         foreach ($this->listenerProvider->getListenersForEvent($event) as $listener) {
-            // @phpstan-ignore-next-line
+            if (!($listener instanceof ListenerInterface)) {
+                throw new \Exception('Listener must implement ListenerInterface');
+            }
             if ($event->isPropagationStopped()) {
                 return $event;
             }
-            $listener($event);
+            $listener->execute($event);
         }
         return $event;
     }
