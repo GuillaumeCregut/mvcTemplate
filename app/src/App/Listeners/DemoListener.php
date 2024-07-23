@@ -4,10 +4,11 @@ namespace App\Listeners;
 
 use App\Events\DemoEvent;
 use Editiel98\Kernel\Events\EventException;
+use Editiel98\Kernel\Events\ListenerInterface;
 
-class DemoListener
+class DemoListener implements ListenerInterface
 {
-    public function __invoke(DemoEvent $event): void
+    public function execute(...$event): void
     {
         if ($event instanceof DemoEvent) {
             //Do stuff here
