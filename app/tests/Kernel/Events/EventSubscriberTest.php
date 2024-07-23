@@ -2,14 +2,14 @@
 
 use PHPUnit\Framework\TestCase;
 use Editiel98\Kernel\Events\EventManager;
-use Editiel98\Kernel\Events\EventSubcriber;
+use Editiel98\Kernel\Events\EventSubscriber;
 
 
 class EventSubscriberTest extends TestCase
 {
     public function testSubscribeEvent(): void
     {
-        EventSubcriber::subscribe('test', function(){});
+        EventSubscriber::subscribe('test', function(){});
         $eventManager=EventManager::create();
         $this->assertTrue($eventManager->hasListener('test'));
     }
