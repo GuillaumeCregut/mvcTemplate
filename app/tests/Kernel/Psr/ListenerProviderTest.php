@@ -43,7 +43,7 @@ class ListenerProviderTest extends TestCase
     {
         $listener1 = $this->createStub(ListenerInterface::class);
         $listener2 = $this->createMock(ListenerInterface::class);
-        $provider=new ListenerProvider();
+        $provider = new ListenerProvider();
         $provider->addListener(InitKernelEvent::class, $listener2, 3);
         $provider->addListener(InitKernelEvent::class, $listener1, 5);
         $arrayEvent = $provider->getListenersForEvent(new InitKernelEvent());
