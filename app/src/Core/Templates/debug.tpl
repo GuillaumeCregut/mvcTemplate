@@ -1,6 +1,7 @@
 <section style="
     margin-top: 10px;
     bottom : 0;
+    position: sticky;
     display: flex;
     width : 100vw;
     padding: 5px;

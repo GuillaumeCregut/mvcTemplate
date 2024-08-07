@@ -14,6 +14,9 @@ class StringConstraint extends AbstractConstraints implements ConstraintInterfac
 
     public function isOK(mixed $value): bool
     {
+        if (null === $value) {
+            return true;
+        }
         if (!is_string($value)) {
             return false;
         }

@@ -4,6 +4,34 @@ namespace Editiel98\Kernel\WebInterface;
 
 class ResponseHandler
 {
+    public const STATUS_CODE = [
+        '200' => 'OK',
+        '201' => 'Created',
+        '204' => 'No Content',
+        '301' => 'Moved Permanently',
+        '302' => 'Found',
+        '303' => 'See Other',
+        '304' => 'Not Modified',
+        '307' => 'Temporary Redirect',
+        '400' => 'Bad Request',
+        '401' => 'Unauthorized',
+        '402' => 'Payment Required',
+        '403' => 'Forbidden',
+        '404' => 'Not Found',
+        '405' => 'Method Not Allowed',
+        '406' => 'Not Acceptable',
+        '407' => 'Proxy Authentication Required',
+        '408' => 'Request Timeout',
+        '409' => 'Conflict',
+        '418' => "I'm a teapot",
+        '500' => 'Internal Server Error',
+        '501' => 'Not Implemented',
+        '502' => 'Bad Gateway',
+        '503' => 'Service Unavailable',
+        '504' => 'Gateway Timeout',
+        '505' => 'HTTP Version Not Supported',
+        '511' => 'Network Authentication Required'
+    ];
     private string $content;
     private string $statusText;
     private int $statusCode;
@@ -57,11 +85,15 @@ class ResponseHandler
     public function sendHeaders(?int $code = 200, ?string $status = 'OK'): void
     {
         if (!$this->headersSent  && !headers_sent()) {
+            $codeKey = strval($code);
+            if (array_key_exists($codeKey, self::STATUS_CODE)) {
+                $statusText = self::STATUS_CODE[$codeKey];
+            }
             if (!isset($this->statusCode)) {
                 $this->statusCode = $code;
             }
             if (!isset($this->statusText)) {
-                $this->statusText = $status;
+                $this->statusText = $statusText ?? $status;
             }
             if (!$this->init) {
                 $this->prepare();
@@ -81,20 +113,18 @@ class ResponseHandler
         $this->headersSent = true;
     }
 
-    public function sendContent(): self
+    public function sendContent(): string
     {
-        echo $this->content;
-        return $this;
+        return $this->content;
     }
 
-    public function send(?int $code = 200, ?string $status = 'OK', ?string $content = ''): self
+    public function send(?int $code = 200, ?string $status = 'OK', ?string $content = ''): string
     {
         $this->sendHeaders($code, $status);
         if (!isset($this->content)) {
             $this->content = $content;
         }
-        $this->sendContent();
-        return $this;
+        return $this->sendContent();
     }
 
     /**

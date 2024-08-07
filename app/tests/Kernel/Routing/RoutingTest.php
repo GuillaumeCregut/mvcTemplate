@@ -9,7 +9,7 @@ class RoutingTest extends TestCase
     public function testRoute(): void
     {
         $handler=RequestHandler::getInstance();
-        $handler->init([], [], ['REQUEST_URI' => '/test'], [], []);
+        $handler->init([], [], ['REQUEST_URI' => '/test'], [], [],[]);
         $this->assertIsArray(Routing::decodeURI('/test'));
     }
 }

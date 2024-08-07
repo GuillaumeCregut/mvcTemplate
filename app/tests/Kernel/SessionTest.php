@@ -12,7 +12,7 @@ class SessionTest extends TestCase
     public function setUp(): void
     {
         $this->handler=RequestHandler::getInstance();
-        $this->handler->init([],[],[],[],[]);
+        $this->handler->init([],[],[],[],[],[]);
     }
 
     public function testGetKeyWithWrongKey(): void

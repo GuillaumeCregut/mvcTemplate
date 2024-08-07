@@ -13,13 +13,12 @@ class GetConstraints
      */
     private static array $constraints = [];
 
-
     /**
-     * @param AbstractEntity $entity
+     * @param class-string $entity
      *
      * @return mixed[]
      */
-    public static function scanEntity(AbstractEntity $entity): array
+    public static function scanEntity(string $entity): array
     {
         $entityReflector = new ReflectionClass($entity);
         foreach ($entityReflector->getProperties() as $property) {

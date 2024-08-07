@@ -2,26 +2,39 @@
 
 namespace Editiel98;
 
-use Editiel98\Kernel\Emitter;
-use Editiel98\Kernel\GetEnv;
-use Editiel98\Kernel\Logger\ErrorLogger;
-use Editiel98\Kernel\Logger\WarnLogger;
-use Editiel98\Kernel\Routing\Routing;
-use Editiel98\Kernel\WebInterface\RequestHandler;
 use Error;
 use Exception;
-use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
+use Editiel98\Kernel\GetEnv;
+use Editiel98\Kernel\Routing\Routing;
+use Whoops\Handler\PrettyPageHandler;
+use Editiel98\Kernel\Logger\WarnLogger;
+use Editiel98\Kernel\Logger\ErrorLogger;
+use Editiel98\Kernel\Events\SystemEvents;
+use Editiel98\Kernel\Events\EventDispatcher;
+use Editiel98\Kernel\Events\EventSubscriber;
+use Editiel98\Kernel\Events\ListenerProvider;
+use Editiel98\Kernel\WebInterface\RequestHandler;
+use Editiel98\Kernel\Events\EventsKernel\InitEventKernel;
+use Editiel98\Kernel\Events\EventsKernel\InitKernelEvent;
 
 class App
 {
-    private Emitter $emitter;
     public static float $timeStart;
+    private EventDispatcher $dispatcher;
+    private ListenerProvider $provider;
     /**
      * @return void
      */
     public function run(): void
     {
+        if (!empty($_SERVER['HTTPS'])) {
+            session_set_cookie_params([
+                'httponly' => true,
+                'secure' => true,
+                'samesite' => 'lax'
+            ]);
+        }
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -31,8 +44,11 @@ class App
             $whoops->register();
             self::$timeStart = microtime(true);
         }
+        $this->provider = ListenerProvider::getInstance();
+        $this->dispatcher = EventDispatcher::getInstance($this->provider);
+        $this->dispatcher->dispatch(new InitKernelEvent());
         $requestHandler = RequestHandler::getInstance();
-        $requestHandler->init($_GET, $_POST, $_SERVER, $_COOKIE, $_SESSION);
+        $requestHandler->init($_GET, $_POST, $_SERVER, $_COOKIE, $_SESSION, $_FILES);
         $this->setEmitter();
         $controllerInfos = Routing::decodeURI($requestHandler->getURI());
         if (empty($controllerInfos)) {
@@ -47,7 +63,7 @@ class App
             $method = $controllerInfos['method'];
             $requestHandler->infos->setValue('Method', $method);
             $response = $controller->$method(...$controllerInfos['params']);
-            $response->send();
+            echo $response->send();
         } catch (Error $e) {
             if (isset($whoops)) {
                 echo $whoops->handleException($e);
@@ -74,9 +90,8 @@ class App
      */
     private function setEmitter(): void
     {
-        $this->emitter = Emitter::getInstance();
-        $this->emitter->on(
-            Emitter::DATABASE_ERROR,
+        EventSubscriber::subscribe(
+            SystemEvents::DATABASE_ERROR,
             function ($message) {
                 $logger = new ErrorLogger();
                 if ($logger->storeToFile($message)) {
@@ -84,8 +99,8 @@ class App
                 }
             }
         );
-        $this->emitter->on(
-            Emitter::MAIL_ERROR,
+        EventSubscriber::subscribe(
+            SystemEvents::MAIL_ERROR,
             function ($to) {
                 $logger = new WarnLogger();
                 $message = "L'envoi du mail à " . $to . ' a échoué';

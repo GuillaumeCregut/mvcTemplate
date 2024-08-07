@@ -11,7 +11,7 @@ class CookieTest extends TestCase
     public function setup(): void
     {
         $this->handler = RequestHandler::getInstance();
-        $this->handler->init([], [], ['REQUEST_URI' => '/', 'HTTP_HOST' => 'localhost'], [], []);
+        $this->handler->init([], [], ['REQUEST_URI' => '/', 'HTTP_HOST' => 'localhost'], [], [],[]);
     }
 
     public function testWithNoValues(): void

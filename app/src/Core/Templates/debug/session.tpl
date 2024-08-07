@@ -9,9 +9,9 @@
             </tr>
         </thead>
         <tbody>
-            {foreach from=$routes key=name item=value}
+            {foreach from=$session key=name item=value}
             <tr>
-                <td>{$key}</td>
+                <td>{$name}</td>
                 <td>
                     {if is_array($value)}
                         {foreach from=$value item=subValue}

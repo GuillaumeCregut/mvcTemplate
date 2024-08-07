@@ -22,7 +22,10 @@ abstract class AbstractField
     protected array $label = ['class' => '', 'value' => ''];
     protected string $placeholder = '';
     protected bool $error = false;
-
+    /**
+     * @var array<mixed>
+     */
+    protected array $ErrorMessages = [];
     public function __construct(string $name, string $id, bool $required)
     {
         $this->name = $name;
@@ -172,6 +175,27 @@ abstract class AbstractField
     public function setError(bool $error): self
     {
         $this->error = $error;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    public function getErrorMessages(): array
+    {
+        return $this->ErrorMessages;
+    }
+
+
+    /**
+     * @param array<mixed> $ErrorMessages
+     *
+     * @return self
+     */
+    public function setErrorMessages(array $ErrorMessages): self
+    {
+        $this->ErrorMessages = $ErrorMessages;
 
         return $this;
     }

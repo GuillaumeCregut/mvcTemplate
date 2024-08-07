@@ -76,10 +76,8 @@ class DebugController extends MainAbstractController
     public function displaySession(): ResponseHandler
     {
         $sessionVars = $this->handler->session->getAll();
-        $this->smarty->assign('routes', $sessionVars);
-        $this->smarty->assign('debug', $this->getDisplay());
         return $this->render('debug/session.tpl', [
-            'routes' => $sessionVars,
+            'session' => $sessionVars,
             "debug" => $this->getDisplay()
         ]);
     }

@@ -35,6 +35,7 @@
         <exclude name="ShortMethodName" />
     </rule>
     <rule ref="rulesets/unusedcode.xml" />
-
+    <exclude-pattern>C:\wamp64\www\editielFramework\app\src\templates_c\*.*</exclude-pattern>
+    <exclude-pattern>C:\wamp64\www\editielFramework\app\src\Core\Templates\smarty\*.*</exclude-pattern>
     
 </ruleset>

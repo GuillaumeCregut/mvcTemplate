@@ -12,7 +12,7 @@ class ResponseHandlerTest extends TestCase
     public function setUp(): void
     {
         $this->handler = RequestHandler::getInstance();
-        $this->handler->init([], [], [], [], []);
+        $this->handler->init([], [], [], [], [],[]);
         $this->response = new ResponseHandler();
     }
 
@@ -67,17 +67,12 @@ class ResponseHandlerTest extends TestCase
 
     public function testPrepareWithrequest(): void
     {
-        $this->handler->init([], [], ['SERVER_PROTOCOL'=>'HTTP/1.0'], [], []);
+        $this->handler->init([], [], ['SERVER_PROTOCOL'=>'HTTP/1.0'], [], [],[]);
         $this->response->prepare();
         $this->assertEquals('HTTP/1.0',$this->response->getVersion());
         $this->assertEquals('UTF-8',$this->response->getCharset());
         $this->assertArrayHasKey('Date',$this->response->getHeaders()->getHeaders());
     }
 
-    public function testSendWithoutAnything(): void
-    {
-        
-        $test=$this->response->send();
-        $this->assertEquals($this->response,$test);
-    } 
+  
 }

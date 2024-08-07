@@ -2,10 +2,11 @@
 
 namespace Editiel98;
 
-use Editiel98\Kernel\Emitter;
+use Editiel98\Kernel\Events\EventManager;
 use Editiel98\Kernel\GetEnv;
 use Editiel98\Kernel\Routing\RegisterController;
 use Editiel98\Kernel\WebInterface\ResponseHandler;
+use Editiel98\Kernel\WebInterface\RestResponseHandler;
 use Editiel98\Templates\DebugController;
 use Editiel98\Templates\SmartyEditiel;
 use Exception;
@@ -15,7 +16,7 @@ abstract class AbstractController
     protected SmartyEditiel $smarty;
     protected Session $session;
     protected Flash $flash;
-    protected Emitter $emitter;
+    protected EventManager $emitter;
     protected bool $hasFlash = false;
     protected int $userId;
     protected int $userRank;
@@ -33,7 +34,7 @@ abstract class AbstractController
             $flashes = $this->flash->getFlash();
             $this->smarty->assignVar('flash', $flashes);
         }
-        $this->emitter = Emitter::getInstance();
+        $this->emitter = EventManager::create();
         $this->getCredentials();
     }
 
@@ -90,6 +91,29 @@ abstract class AbstractController
         $rhandler = new ResponseHandler();
         $rhandler->setHeaderResponse(302, 'Found');
         $rhandler->addHeader('Location', $routes[$routeName]);
+        return $rhandler;
+    }
+
+    /**
+     * @param mixed[] $content
+     * @param int $status
+     * @param string $code
+     *
+     * @return RestResponseHandler
+     */
+    protected function jsonResponse(array $content, int $status = 200, string $code = 'OK'): RestResponseHandler
+    {
+        $codeKey = strval($status);
+        if (array_key_exists($codeKey, ResponseHandler::STATUS_CODE)) {
+            $code = ResponseHandler::STATUS_CODE[$codeKey];
+        }
+        $rhandler = new RestResponseHandler();
+        $rhandler->setHeaderResponse($status, $code);
+        try {
+            $rhandler->prepareJson($content);
+        } catch (\Exception $e) {
+            throw new \Exception('Error in JSON encoding');
+        }
         return $rhandler;
     }
 }

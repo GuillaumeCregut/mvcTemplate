@@ -8,7 +8,6 @@ namespace Editiel98\Kernel;
 
 use Error;
 use Exception;
-use PhpParser\Node\Expr\Cast\String_;
 
 class File extends \SplFileInfo
 {

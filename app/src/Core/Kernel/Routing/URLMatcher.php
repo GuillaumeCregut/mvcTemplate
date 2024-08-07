@@ -96,7 +96,8 @@ class URLMatcher
             $testArray = explode('/', $urltoTest);
             $urlArray = explode('/', $urlTemplate);
             $slugsValues = [];
-            for ($i = 0; $i < count($urlArray); $i++) {
+            $countUrlArray = count($urlArray);
+            for ($i = 0; $i <  $countUrlArray; $i++) {
                 if ($testArray[$i] === $urlArray[$i]) {
                     continue;
                 }
